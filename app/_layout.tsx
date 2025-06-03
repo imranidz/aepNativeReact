@@ -21,6 +21,7 @@ export default function RootLayout() {
     <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: 'Home' }} />
+        <Drawer.Screen name="AppIdConfigView" options={{ title: 'AppIdConfigView' }} />
         <Drawer.Screen name="CoreView" options={{ title: 'CoreView' }} />
         <Drawer.Screen name="AssuranceView" options={{ title: 'AssuranceView' }} />
         <Drawer.Screen name="ConsentView" options={{ title: 'ConsentView' }} />

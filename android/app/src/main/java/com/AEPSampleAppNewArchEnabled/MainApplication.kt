@@ -55,7 +55,9 @@ class MainApplication : Application(), ReactApplication {
           override fun getPackages(): List<ReactPackage> {
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(new MyReactNativePackage());
-            return PackageList(this).packages
+            val packages = PackageList(this).packages.toMutableList()
+            packages.add(AppIdPackage())
+            return packages
           }
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
@@ -74,6 +76,9 @@ class MainApplication : Application(), ReactApplication {
     super.onCreate()
     MobileCore.setApplication(this)
     MobileCore.setLogLevel(LoggingMode.DEBUG)
+    
+    // Initialize with default App ID - the actual App ID will be set by the React Native side
+    // if one exists in AsyncStorage
     MobileCore.configureWithAppID("d4b7d80f6e21/6b1086c5b3d0/launch-065f91be4881-development")
 
     val extensions: List<Class<out Extension?>> = Arrays.asList(
