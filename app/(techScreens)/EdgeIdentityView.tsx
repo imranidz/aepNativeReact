@@ -18,8 +18,8 @@ import {
   IdentityItem,
   IdentityMap,
 } from '@adobe/react-native-aepedgeidentity';
-import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
+import styles from '../../styles/styles';
+import {NavigationProps} from '../../types/props';
 import { useRouter } from 'expo-router';
 
 function updateIdentities() {

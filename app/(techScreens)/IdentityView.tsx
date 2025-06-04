@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {Identity, MobileVisitorAuthenticationState} from '@adobe/react-native-aepcore';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
 
 function identityExtensionVersion() {

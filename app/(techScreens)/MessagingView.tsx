@@ -14,7 +14,7 @@ import React from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import {Messaging} from '@adobe/react-native-aepmessaging'
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
 
 const SURFACES = ['android-cb-preview'];

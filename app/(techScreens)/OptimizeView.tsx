@@ -17,7 +17,7 @@ import {
   Proposition,
 } from '@adobe/react-native-aepoptimize';
 import {WebView} from 'react-native-webview';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import {
   Button,
   Text,

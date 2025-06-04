@@ -14,7 +14,7 @@ import React, {useState} from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 import {MobileCore} from '@adobe/react-native-aepcore';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
 
 function updateCollectConsent(allowed: boolean) {

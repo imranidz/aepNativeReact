@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Text, View, TextInput, ScrollView, Alert, NativeModules } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MobileCore } from '@adobe/react-native-aepcore';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
 
 const { AppIdModule } = NativeModules;

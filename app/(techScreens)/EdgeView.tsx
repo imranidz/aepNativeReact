@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import React, {useState} from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
 
 const EdgeView = () => {

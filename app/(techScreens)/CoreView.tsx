@@ -21,8 +21,8 @@ import {
   LogLevel,
   PrivacyStatus,
 } from '@adobe/react-native-aepcore';
-import styles from '../styles/styles';
-import {NavigationProps} from '../types/props';
+import styles from '../../styles/styles';
+import {NavigationProps} from '../../types/props';
 
 import { Stack, useRouter } from 'expo-router';
 

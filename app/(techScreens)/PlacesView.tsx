@@ -19,8 +19,8 @@ import {
   PlacesGeofenceTransitionType,
   PlacesLocation,
 } from '@adobe/react-native-aepplaces';
-import {NavigationProps} from '../types/props';
-import styles from '../styles/styles';
+import {NavigationProps} from '../../types/props';
+import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
 
 const EXAMPLE_LATITUDE = 37.3285;
