@@ -21,7 +21,6 @@ export default function RootLayout() {
     <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: 'Technical View' }} />
-        <Drawer.Screen name="ConsumerView" options={{ title: 'Consumer View' }} />
         <Drawer.Screen name="(errors)/+not-found" options={{ drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/AppIdConfigView" options={{ title: 'App ID Config', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/AssuranceView" options={{ title: 'Assurance', drawerItemStyle: { display: 'none' } }} />
@@ -36,6 +35,7 @@ export default function RootLayout() {
         <Drawer.Screen name="(techScreens)/PlacesView" options={{ title: 'Places', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/ProfileView" options={{ title: 'User Profile', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/TargetView" options={{ title: 'Target', drawerItemStyle: { display: 'none' } }} />
+        <Drawer.Screen name="(consumerTabs)" options={{ title: 'Consumer View' }} />
       </Drawer>
     </ThemeProvider>
   );

@@ -24,7 +24,6 @@ export default function HomeScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={localStyles.buttonContainer}>
-        <Button onPress={() => navigation.navigate('ConsumerView')} title="ConsumerView" />
         <Button onPress={() => navigation.navigate('(techScreens)/AppIdConfigView')} title="AppIdConfigView" />
         <Button onPress={() => navigation.navigate('(techScreens)/CoreView')} title="Core/Lifecycle/Signal" />
         <Button onPress={() => navigation.navigate('(techScreens)/ProfileView')} title="UserProfile" />
