@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {
   MobileCore,
@@ -62,10 +62,12 @@ function dispatchEventWithResponseCallback() {
 function setAdvertisingIdentifier() {
   MobileCore.setAdvertisingIdentifier('adID');
 }
-function getSdkIdentities() {
-  MobileCore.getSdkIdentities().then(identities =>
-    console.log('AdobeExperienceSDK: Identities = ' + identities),
-  );
+function getSdkIdentities(setLog: (msg: string) => void) {
+  MobileCore.getSdkIdentities().then(identities => {
+    const msg = 'AdobeExperienceSDK: Identities = ' + identities;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
 function updateConfiguration() {
@@ -76,20 +78,24 @@ function clearUpdatedConfiguration() {
   MobileCore.clearUpdatedConfiguration();
 }
 
-function getLogLevel() {
-  MobileCore.getLogLevel().then(level =>
-    console.log('AdobeExperienceSDK: Log Level = ' + level),
-  );
+function getLogLevel(setLog: (msg: string) => void) {
+  MobileCore.getLogLevel().then(level => {
+    const msg = 'AdobeExperienceSDK: Log Level = ' + level;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
 function setLogLevel() {
   MobileCore.setLogLevel(LogLevel.VERBOSE);
 }
 
-function lifecycleExtensionVersion() {
-  Lifecycle.extensionVersion().then(version =>
-    console.log('AdobeExperienceSDK: Lifecycle version: ' + version),
-  );
+function lifecycleExtensionVersion(setLog: (msg: string) => void) {
+  Lifecycle.extensionVersion().then(version => {
+    const msg = 'AdobeExperienceSDK: Lifecycle version: ' + version;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
 function identityExtensionVersion() {
@@ -98,26 +104,32 @@ function identityExtensionVersion() {
   );
 }
 
-function signalExtensionVersion() {
-  Signal.extensionVersion().then(version =>
-    console.log('AdobeExperienceSDK: Signal version: ' + version),
-  );
+function signalExtensionVersion(setLog: (msg: string) => void) {
+  Signal.extensionVersion().then(version => {
+    const msg = 'AdobeExperienceSDK: Signal version: ' + version;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
-function coreExtensionVersion() {
-  MobileCore.extensionVersion().then(version =>
-    console.log('AdobeExperienceSDK: MobileCore version: ' + version),
-  );
+function coreExtensionVersion(setLog: (msg: string) => void) {
+  MobileCore.extensionVersion().then(version => {
+    const msg = 'AdobeExperienceSDK: MobileCore version: ' + version;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
 function setPrivacyOptIn() {
   MobileCore.setPrivacyStatus(PrivacyStatus.OPT_OUT);
 }
 
-function getPrivacyStatus() {
-  MobileCore.getPrivacyStatus().then(status =>
-    console.log('AdobeExperienceSDK: Privacy Status = ' + status),
-  );
+function getPrivacyStatus(setLog: (msg: string) => void) {
+  MobileCore.getPrivacyStatus().then(status => {
+    const msg = 'AdobeExperienceSDK: Privacy Status = ' + status;
+    console.log(msg);
+    setLog(msg);
+  });
 }
 
 function resetIdentities() {
@@ -126,25 +138,26 @@ function resetIdentities() {
 
 const CoreView = () => {
   const router = useRouter();
+  const [log, setLog] = useState('');
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75, paddingBottom: 100}}>
         <Button onPress={() => router.back()} title="Go to main page" />
         <Text style={styles.welcome}>Core</Text>
-        <Button title="extensionVersion()" onPress={coreExtensionVersion} />
+        <Button title="extensionVersion()" onPress={() => coreExtensionVersion(setLog)} />
         <Button title="updateConfiguration" onPress={updateConfiguration} />
         <Button title="clearUpdatedConfiguration" onPress={clearUpdatedConfiguration} />
         <Button title="setPrivacyStatus(OptIn)" onPress={setPrivacyOptIn} />
-        <Button title="getPrivacyStatus()" onPress={getPrivacyStatus} />
+        <Button title="getPrivacyStatus()" onPress={() => getPrivacyStatus(setLog)} />
         <Button title="setLogLevel(LogLevel.VERBOSE)" onPress={setLogLevel} />
-        <Button title="getLogLevel()" onPress={getLogLevel} />
+        <Button title="getLogLevel()" onPress={() => getLogLevel(setLog)} />
         <Button title="setPushIdentifier()" onPress={setPushIdentifier} />
         <Button
           title="setAdvertisingIdentifier()"
           onPress={setAdvertisingIdentifier}
         />
-        <Button title="getSdkIdentities()" onPress={getSdkIdentities} />
+        <Button title="getSdkIdentities()" onPress={() => getSdkIdentities(setLog)} />
         <Button title="collectPii()" onPress={collectPii} />
         <Button title="trackAction()" onPress={trackAction} />
         <Button title="trackState()" onPress={trackState} />
@@ -157,13 +170,16 @@ const CoreView = () => {
         <Text style={styles.welcome}>Lifecycle</Text>
         <Button
           title="Lifecycle::extensionVersion()"
-          onPress={lifecycleExtensionVersion}
+          onPress={() => lifecycleExtensionVersion(setLog)}
         />
         <Text style={styles.welcome}>Signal</Text>
         <Button
           title="Signal::extensionVersion()"
-          onPress={signalExtensionVersion}
+          onPress={() => signalExtensionVersion(setLog)}
         />
+        {log ? (
+          <Text style={{ marginTop: 24, color: '#333', fontSize: 16, textAlign: 'center' }}>{log}</Text>
+        ) : null}
       </ScrollView>
     </View>
   );

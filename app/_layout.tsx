@@ -3,6 +3,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 import { useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { MobileCore } from '@adobe/react-native-aepcore';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -10,18 +12,30 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  
   const scheme = useColorScheme();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     // Hide the splash screen after the app is ready
     SplashScreen.hideAsync();
   }, []);
 
+  useEffect(() => {
+    if (isFocused) {
+      // Only run when HomeTab is actually focused
+      MobileCore.trackState('HomeTab', {
+        'web.webPageDetails.name': 'Home',
+        'application.name': 'AEPSampleApp',
+      });
+      console.log('HomeTab viewed - trigger Adobe tracking here');
+    }
+  }, [isFocused]);
+
   return (
     <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Drawer>
         <Drawer.Screen name="index" options={{ title: 'Technical View' }} />
-        <Drawer.Screen name="(errors)/+not-found" options={{ drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/AppIdConfigView" options={{ title: 'App ID Config', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/AssuranceView" options={{ title: 'Assurance', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/ConsentView" options={{ title: 'Consent', drawerItemStyle: { display: 'none' } }} />

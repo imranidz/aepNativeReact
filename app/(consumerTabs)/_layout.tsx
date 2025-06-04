@@ -40,12 +40,32 @@ export default function ConsumerTabsLayout() {
           ),
         }}
       />
+      
+
       <Tabs.Screen
-        name="index"
+        name="+not-found"
         options={{
           tabBarButton: () => null,
         }}
       />
+
+      <Tabs.Screen
+        name="_home/[category]/[product]"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+
+<Tabs.Screen
+        name="_home/[category]"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+
+
     </Tabs>
+    
+    
   );
 }

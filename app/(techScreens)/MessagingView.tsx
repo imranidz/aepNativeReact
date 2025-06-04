@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {Button, Text, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import {Messaging} from '@adobe/react-native-aepmessaging'
@@ -19,9 +19,11 @@ import { useRouter } from 'expo-router';
 
 const SURFACES = ['android-cb-preview'];
 
-const messagingExtensionVersion = async () => {
+const messagingExtensionVersion = async (setLog: (msg: string) => void) => {
   const version = await Messaging.extensionVersion();
-  console.log(`AdobeExperienceSDK: Messaging version: ${version}`);
+  const msg = `AdobeExperienceSDK: Messaging version: ${version}`;
+  console.log(msg);
+  setLog(msg);
 };
 
 const refreshInAppMessages = () => {
@@ -66,13 +68,14 @@ const getLatestMessage = async () => {
 
 function MessagingView() {
   const router = useRouter();
+  const [log, setLog] = useState('');
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
         <Text style={styles.welcome}>Messaging</Text>
-        <Button title="extensionVersion()" onPress={messagingExtensionVersion} />
+        <Button title="extensionVersion()" onPress={() => messagingExtensionVersion(setLog)} />
         <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
         <Button
@@ -86,6 +89,9 @@ function MessagingView() {
         <Button title="getCachedMessages()" onPress={getCachedMessages} />
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
         <Button title="trackAction()" onPress={trackAction} />
+        {log ? (
+          <Text style={{ marginTop: 24, color: '#333', fontSize: 16, textAlign: 'center' }}>{log}</Text>
+        ) : null}
       </ScrollView>
     </View>
   );
