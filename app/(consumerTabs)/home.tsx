@@ -5,6 +5,7 @@ import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFocusEffect, useTheme } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
 console.log('Rendering HomeTab'); 
 const CATEGORIES = [
   { key: 'family', label: 'Family', description: 'Gear and essentials for family camping adventures.' },
@@ -16,6 +17,17 @@ const CATEGORIES = [
   { key: 'desert', label: 'Desert', description: 'Gear for desert camping and sun protection.' },
   { key: 'mountain', label: 'Mountain', description: 'Equipment for mountain and alpine adventures.' },
 ];
+
+const CATEGORY_ICONS: { [key: string]: string } = {
+  family: 'people',
+  men: 'man',
+  women: 'woman',
+  travel: 'airplane',
+  experiences: 'walk',
+  water: 'water',
+  desert: 'sunny',
+  mountain: 'trail-sign',
+};
 
 export default function HomeTab() {
   useFocusEffect(
@@ -38,8 +50,8 @@ export default function HomeTab() {
 
   const renderCategory = ({ item }: { item: any }) => (
     <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]} onPress={() => handleCategoryPress(item.key)}>
-      {/* Placeholder for image: replace with <Image source={require('...')} style={styles.cardImage} /> */}
-      <View style={[styles.cardImage, { backgroundColor: colors.border }]} />
+      <Ionicons name={CATEGORY_ICONS[item.key] as any || 'cube'} size={32} color={colors.primary} style={{ position: 'absolute', left: 32, top: 36, zIndex: 2 }} />
+      <View style={[styles.cardImage, { backgroundColor: '#e3eaf3' }]} />
       <View style={{ flex: 1 }}>
         <ThemedText style={styles.cardTitle}>{item.label}</ThemedText>
         <ThemedText style={styles.cardDescription}>{item.description}</ThemedText>

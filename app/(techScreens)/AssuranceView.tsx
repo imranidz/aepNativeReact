@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Button,
   StyleSheet,
@@ -32,9 +32,13 @@ const AssuranceView = () => {
   const router = useRouter();
   const theme = useTheme();
 
-  Assurance.extensionVersion().then(version => {
-    setVersion(version);
-  });
+  useEffect(() => {
+    let isMounted = true;
+    Assurance.extensionVersion().then(version => {
+      if (isMounted) setVersion(version);
+    });
+    return () => { isMounted = false; };
+  }, []);
 
   return (
     <ThemedView style={styles.container}>

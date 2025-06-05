@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Optimize,
   DecisionScope,
@@ -77,6 +77,29 @@ export default () => {
     decisionScopeJson,
     decisionScopeTargetMbox,
   ];
+
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    Optimize.extensionVersion().then(version => {
+      if (isMounted.current) setVersion(version);
+    });
+    // Subscribe to proposition updates
+    Optimize.onPropositionUpdate({
+      call(propositions) {
+        if (isMounted.current && propositions) {
+          setTextProposition(propositions.get(decisionScopeText.getName()));
+          setImageProposition(propositions.get(decisionScopeImage.getName()));
+          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
+          setJsonProposition(propositions.get(decisionScopeJson.getName()));
+          setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+        }
+      },
+    });
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const optimizeExtensionVersion = async () => {
     const version = await Optimize.extensionVersion();

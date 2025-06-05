@@ -65,13 +65,57 @@ import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useTheme } from '@react-navigation/native';
+import { useCart } from '../../../../components/CartContext';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
+const PRODUCT_ICONS: { [key: string]: any } = {
+  // Family
+  'Family Tent (6-person)': 'home',
+  'Family Sleeping Bag Set': 'bed',
+  'Family Camping Cookware': 'restaurant',
+  "Kids' Hiking Boots": 'walk',
+  // Men
+  "Men's Hiking Boots": 'walk',
+  "Men's Waterproof Jacket": 'rainy',
+  "Men's Trekking Pants": 'body',
+  "Men's Base Layer Shirt": 'shirt',
+  // Women
+  "Women's Hiking Boots": 'walk',
+  "Women's Insulated Jacket": 'snow',
+  "Women's Hiking Backpack": 'briefcase',
+  "Women's Quick-Dry Pants": 'body',
+  // Travel
+  'Lightweight Travel Backpack': 'briefcase',
+  'Packable Rain Jacket': 'rainy',
+  'Travel Hammock': 'bed',
+  'Portable Water Filter': 'water',
+  // Experiences
+  'Guided Mountain Hike': 'trail-sign',
+  'Family Camping Weekend': 'bonfire',
+  'Desert Survival Course': 'sunny',
+  'Kayak Adventure Tour': 'boat',
+  // Water
+  'Inflatable Kayak': 'boat',
+  'Waterproof Dry Bag': 'water',
+  'Water Purification Tablets': 'water',
+  'Fishing Kit': 'fish',
+  // Desert
+  'Desert Tent': 'home',
+  'Sun Protection Hat': 'sunny',
+  'Hydration Pack': 'water',
+  'Sand-Proof Blanket': 'bed',
+  // Mountain
+  'Mountaineering Boots': 'walk',
+  'Crampons': 'snow',
+  'Down Sleeping Bag': 'bed',
+  'Avalanche Safety Kit': 'alert',
+};
 
 export default function ProductDetail() {
   const { category, product } = useLocalSearchParams<{ category: string; product: string }>();
   const router = useRouter();
-  const [added, setAdded] = useState(false);
   const { colors } = useTheme();
+  const { addToCart, isInCart } = useCart();
 
   // Find the product in the category
   const products = CATEGORY_OPTIONS[category ?? ''] || [];
@@ -93,8 +137,11 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
-    setAdded(true);
-    console.log('Add to Cart:', { category, product, productData });
+    addToCart({
+      category: category ?? '',
+      name: productData.name,
+      price: productData.price,
+    });
     // Analytics tracking for add to cart
     MobileCore.trackAction('addToCart', {
       'product.name': productData.name,
@@ -105,11 +152,14 @@ export default function ProductDetail() {
     });
   };
 
+  const added = isInCart(productData.name, category ?? '');
+
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
       </TouchableOpacity>
+      <Ionicons name={PRODUCT_ICONS[productData.name] || 'cube'} size={48} color={colors.primary} style={{ marginBottom: -100, zIndex: 2 }} />
       <View style={styles.image} />
       <ThemedText style={styles.title}>{productData.name}</ThemedText>
       <ThemedText style={styles.description}>{productData.description}</ThemedText>
@@ -122,7 +172,7 @@ export default function ProductDetail() {
         onPress={handleAddToCart}
         disabled={added}
       >
-        <ThemedText style={styles.addToCartText}>{added ? 'Added!' : 'Add to Cart'}</ThemedText>
+        <ThemedText style={[styles.addToCartText, { color: '#fff' }]}>{added ? 'Added!' : 'Add to Cart'}</ThemedText>
       </TouchableOpacity>
     </ThemedView>
   );

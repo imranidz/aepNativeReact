@@ -5,6 +5,8 @@ import { Drawer } from 'expo-router/drawer';
 import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { CartProvider } from '../components/CartContext';
+import { Image } from 'react-native';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -15,6 +17,8 @@ export default function RootLayout() {
   const scheme = useColorScheme();
   const isFocused = useIsFocused();
   const { colors } = useTheme();
+
+  const isDark = scheme === 'dark';
 
   useEffect(() => {
     // Hide the splash screen after the app is ready
@@ -33,29 +37,37 @@ export default function RootLayout() {
   }, [isFocused]);
 
   return (
-    <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Drawer
-        screenOptions={{
-          headerTintColor: colors.text,
-          headerStyle: { backgroundColor: colors.background },
-        }}
-      >
-        <Drawer.Screen name="index" options={{ title: 'Technical View' }} />
-        <Drawer.Screen name="(techScreens)/AppIdConfigView" options={{ title: 'App ID Config', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/AssuranceView" options={{ title: 'Assurance', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/ConsentView" options={{ title: 'Consent', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/CoreView" options={{ title: 'Core / Lifecycle / Signal', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/EdgeBridgeView" options={{ title: 'Edge Bridge', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/EdgeIdentityView" options={{ title: 'Edge Identity', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/EdgeView" options={{ title: 'Edge', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/IdentityView" options={{ title: 'Identity', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/MessagingView" options={{ title: 'Messaging', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/OptimizeView" options={{ title: 'Optimize', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/PlacesView" options={{ title: 'Places', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/ProfileView" options={{ title: 'User Profile', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(techScreens)/TargetView" options={{ title: 'Target', drawerItemStyle: { display: 'none' } }} />
-        <Drawer.Screen name="(consumerTabs)" options={{ title: 'Consumer View' }} />
-      </Drawer>
-    </ThemeProvider>
+    <CartProvider>
+      <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+        <Drawer
+          screenOptions={{
+            headerTintColor: isDark ? '#fff' : colors.text,
+            headerStyle: { backgroundColor: isDark ? '#181c20' : colors.background },
+            headerRight: () => (
+              <Image
+                source={require('../assets/images/ea-logo-horizontal.png')}
+                style={{ width: 100, height: 32, resizeMode: 'contain', marginRight: 16 }}
+              />
+            ),
+          }}
+        >
+          <Drawer.Screen name="index" options={{ title: 'Technical View' }} />
+          <Drawer.Screen name="(techScreens)/AppIdConfigView" options={{ title: 'App ID Config', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/AssuranceView" options={{ title: 'Assurance', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/ConsentView" options={{ title: 'Consent', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/CoreView" options={{ title: 'Core / Lifecycle / Signal', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/EdgeBridgeView" options={{ title: 'Edge Bridge', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/EdgeIdentityView" options={{ title: 'Edge Identity', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/EdgeView" options={{ title: 'Edge', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/IdentityView" options={{ title: 'Identity', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/MessagingView" options={{ title: 'Messaging', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/OptimizeView" options={{ title: 'Optimize', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/PlacesView" options={{ title: 'Places', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/ProfileView" options={{ title: 'User Profile', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/TargetView" options={{ title: 'Target', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(consumerTabs)" options={{ title: 'Consumer View' }} />
+        </Drawer>
+      </ThemeProvider>
+    </CartProvider>
   );
 }
