@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Button, TextInput } from 'react-native';
+import { View, Button, TextInput } from 'react-native';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
@@ -13,6 +16,7 @@ export default function ProfileTab() {
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [error, setError] = useState('');
+  const { colors } = useTheme();
 
   useFocusEffect(
     useCallback(() => {
@@ -58,14 +62,14 @@ export default function ProfileTab() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Ionicons name="person" size={48} color="#007AFF" />
-      <Text style={{ fontSize: 24, marginTop: 12 }}>Profile</Text>
+    <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Ionicons name="person" size={48} color={colors.primary} />
+      <ThemedText type="title" style={{ marginTop: 12 }}>Profile</ThemedText>
       <View style={{ marginTop: 24, width: '80%' }}>
         {loggedIn ? (
           <>
-            <Text style={{ marginBottom: 12 }}>Welcome, {firstName}!</Text>
-            <Text style={{ marginBottom: 12 }}>Email: {email}</Text>
+            <ThemedText style={{ marginBottom: 12 }}>Welcome, {firstName}!</ThemedText>
+            <ThemedText style={{ marginBottom: 12 }}>Email: {email}</ThemedText>
             <Button title="Log Out" onPress={handleLogout} />
           </>
         ) : (
@@ -74,14 +78,16 @@ export default function ProfileTab() {
               placeholder="First Name"
               value={inputFirstName}
               onChangeText={setInputFirstName}
-              style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginBottom: 12 }}
+              style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 6, padding: 8, marginBottom: 12, backgroundColor: colors.card, color: colors.text }}
+              placeholderTextColor={colors.text + '99'}
               autoCapitalize="words"
             />
             <TextInput
               placeholder="Email Address"
               value={inputEmail}
               onChangeText={setInputEmail}
-              style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginBottom: 12 }}
+              style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 6, padding: 8, marginBottom: 12, backgroundColor: colors.card, color: colors.text }}
+              placeholderTextColor={colors.text + '99'}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -89,14 +95,15 @@ export default function ProfileTab() {
               placeholder="Password"
               value={inputPassword}
               onChangeText={setInputPassword}
-              style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 6, padding: 8, marginBottom: 12 }}
+              style={{ borderWidth: 1, borderColor: colors.border, borderRadius: 6, padding: 8, marginBottom: 12, backgroundColor: colors.card, color: colors.text }}
+              placeholderTextColor={colors.text + '99'}
               secureTextEntry
             />
-            {error ? <Text style={{ color: 'red', marginBottom: 12 }}>{error}</Text> : null}
+            {error ? <ThemedText style={{ color: 'red', marginBottom: 12 }}>{error}</ThemedText> : null}
             <Button title="Log In" onPress={handleLogin} />
           </>
         )}
       </View>
-    </View>
+    </ThemedView>
   );
 }

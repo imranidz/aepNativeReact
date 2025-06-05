@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import React, {useState} from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {
   AuthenticatedState,
   Identity,
@@ -21,6 +21,9 @@ import {
 import styles from '../../styles/styles';
 import {NavigationProps} from '../../types/props';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 function updateIdentities() {
   var namespace1 = 'namespace1';
@@ -87,21 +90,21 @@ const EdgeIdentityView = ({navigation}: NavigationProps) => {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={() => router.back()} title="Go to main page" />
-        <Text style={styles.welcome}>EdgeIdentity v{version}</Text>
+        <ThemedText style={styles.welcome}>EdgeIdentity v{version}</ThemedText>
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId} />
         <Button title="updateIdentities()" onPress={updateIdentities} />
         <Button title="removeIdentity()" onPress={removeIdentity} />
         <Button title="getIdentities()" onPress={getIdentities} />
         <Button title="getUrlVariables()" onPress={getUrlVariables} />
         <View style={styles.breakLine} />
-        <Text>{identities}</Text>
-        <Text>{ecid}</Text>
-        <Text>{urlvariables}</Text>
+        <ThemedText>{identities}</ThemedText>
+        <ThemedText>{ecid}</ThemedText>
+        <ThemedText>{urlvariables}</ThemedText>
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, View } from 'react-native';
 import {
   Target,
   TargetOrder,
@@ -21,6 +21,9 @@ import {
   TargetRequestObject,
 } from '@adobe/react-native-aeptarget';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 function TargetView() {
   const targetExtensionVersion = async () => {
@@ -142,10 +145,10 @@ function TargetView() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{ marginTop: 75 }}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Target Test App</Text>
+        <ThemedText style={styles.welcome}>Target Test App</ThemedText>
         <Button title="extensionVersion()" onPress={targetExtensionVersion} />
         <Button
           title="clearPrefetchCache()"
@@ -170,7 +173,7 @@ function TargetView() {
         <Button title="displayedLocations(...)" onPress={displayedLocations} />
         <Button title="clickedLocation(...)" onPress={clickedLocation} />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 }
 
@@ -179,7 +182,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 22,

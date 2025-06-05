@@ -11,11 +11,14 @@ governing permissions and limitations under the License.
 */
 
 import React, {useState} from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {EdgeBridge} from '@adobe/react-native-aepedgebridge';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 
 const EdgeBridgeView = () => {
@@ -37,14 +40,14 @@ function trackState() {
 }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Edge Bridge v{version}</Text>
+        <ThemedText style={styles.welcome}>Edge Bridge v{version}</ThemedText>
         <Button title="MobileCore.trackAction()" onPress={trackAction} />
         <Button title="MobileCore.trackState()" onPress={trackState} />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

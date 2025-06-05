@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react';
-import {Button, ScrollView, Text, View} from 'react-native';
+import {Button, ScrollView, View} from 'react-native';
 import {
   Places,
   PlacesAuthStatus,
@@ -22,6 +22,9 @@ import {
 import {NavigationProps} from '../../types/props';
 import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const EXAMPLE_LATITUDE = 37.3285;
 const EXAMPLE_LONGITUDE = -121.8882;
@@ -86,12 +89,13 @@ const setAuthorizationStatus = () => {
 
 const PlacesView = () => {
     const router = useRouter();
+    const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Places</Text>
+        <ThemedText style={styles.welcome}>Places</ThemedText>
         <Button title="extensionVersion()" onPress={extensionVersion} />
         <Button
           title="getNearbyPointsOfInterest()"
@@ -109,7 +113,7 @@ const PlacesView = () => {
         />
         <Button title="clear" onPress={clear} />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

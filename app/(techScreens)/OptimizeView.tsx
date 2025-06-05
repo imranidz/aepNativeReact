@@ -20,7 +20,6 @@ import {WebView} from 'react-native-webview';
 import styles from '../../styles/styles';
 import {
   Button,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -28,6 +27,9 @@ import {
 } from 'react-native';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const ViewTypes = {
   header: 0,
@@ -122,13 +124,13 @@ export default () => {
     if (targetProposition?.items) {
       if (targetProposition.items[0].format === TARGET_OFFER_TYPE_JSON) {
         return (
-          <Text
+          <ThemedText
             style={{margin: 10, fontSize: 18}}
             onPress={() => {
               targetProposition?.items[0].tapped(targetProposition);
             }}>
             {targetProposition.items[0].content}
-          </Text>
+          </ThemedText>
         );
       } else if (targetProposition.items[0].format === TARGET_OFFER_TYPE_HTML) {
         return (
@@ -147,7 +149,7 @@ export default () => {
         );
       }
     }
-    return <Text>Default Target Offer</Text>;
+    return <ThemedText>Default Target Offer</ThemedText>;
   };
 
   let dataProvider = new DataProvider((data1, data2) => {
@@ -190,16 +192,16 @@ export default () => {
     switch (type) {
       case ViewTypes.header:
         return (
-          <View>
-            <Text style={styles.header}>{data}</Text>
-          </View>
+          <ThemedView>
+            <ThemedText style={styles.header}>{data}</ThemedText>
+          </ThemedView>
         );
 
       case ViewTypes.content:
         if (data === textProposition) {
           return (
-            <View>
-              <Text
+            <ThemedView>
+              <ThemedText
                 style={{margin: 10, fontSize: 18}}
                 onPress={e => {
                   textProposition?.items[0].tapped(textProposition);
@@ -207,12 +209,12 @@ export default () => {
                 {textProposition?.items[0]
                   ? textProposition.items[0].content
                   : defaultPropositions.textProposition}
-              </Text>
-            </View>
+              </ThemedText>
+            </ThemedView>
           );
         } else if (data === imageProposition) {
           return (
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <ThemedView style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 onPress={e => {
                   imageProposition?.items[0].tapped(imageProposition);
@@ -225,11 +227,11 @@ export default () => {
                       : defaultPropositions.htmlProposition,
                   }}></Image>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
           );
         } else if (data === jsonProposition) {
           return (
-            <Text
+            <ThemedText
               style={{margin: 10, fontSize: 18}}
               onPress={e => {
                 jsonProposition?.items[0].tapped(jsonProposition);
@@ -238,7 +240,7 @@ export default () => {
               {jsonProposition?.items?.[0]
                 ? jsonProposition.items[0].content
                 : defaultPropositions.jsonProposition}
-            </Text>
+            </ThemedText>
           );
         } else if (data === htmlProposition) {
           return (
@@ -246,7 +248,7 @@ export default () => {
               onPress={() => {
                 htmlProposition?.items[0].tapped(htmlProposition);
               }}>
-              <View style={{width: width, height: 150}}>
+              <ThemedView style={{width: width, height: 150}}>
                 <WebView
                   textZoom={100}
                   originWhitelist={['*']}
@@ -256,16 +258,16 @@ export default () => {
                       : defaultPropositions.htmlProposition,
                   }}
                 />
-              </View>
+              </ThemedView>
             </TouchableOpacity>
           );
         } else if (data === targetProposition) {
           return renderTargetOffer();
         }
         return (
-          <View>
-            <Text style={styles.text}>Offer type didn't match</Text>
-          </View>
+          <ThemedView>
+            <ThemedText style={styles.text}>Offer type didn't match</ThemedText>
+          </ThemedView>
         );
       default:
         return null;
@@ -320,9 +322,9 @@ export default () => {
   const router = useRouter();
 
   return (
-    <View style={{...styles.container, marginTop: 30}}>
+    <ThemedView style={{...styles.container, marginTop: 30}}>
       <Button onPress={() => router.back()}  title="Go to main page" />
-      <Text style={styles.welcome}>Optimize</Text>
+      <ThemedText style={styles.welcome}>Optimize</ThemedText>
       <View style={{margin: 5}}>
         <Button title="Extension Version" onPress={optimizeExtensionVersion} />
       </View>
@@ -344,10 +346,10 @@ export default () => {
           onPress={onPropositionUpdate}
         />
       </View>
-      <Text style={{...styles.welcome, fontSize: 20}}>
+      <ThemedText style={{...styles.welcome, fontSize: 20}}>
         SDK Version:: {version}
-      </Text>
-      <Text style={styles.welcome}>Personalized Offers</Text>
+      </ThemedText>
+      <ThemedText style={styles.welcome}>Personalized Offers</ThemedText>
       <RecyclerListView
         style={{width: width}}
         layoutProvider={layoutProvider}
@@ -355,6 +357,6 @@ export default () => {
         rowRenderer={rowRenderer}
         onVisibleIndicesChanged={indicesChangeHandler}
       />
-    </View>
+    </ThemedView>
   );
 };

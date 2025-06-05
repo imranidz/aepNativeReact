@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 import React, { useState } from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {
   MobileCore,
   Lifecycle,
@@ -25,6 +25,9 @@ import styles from '../../styles/styles';
 import {NavigationProps} from '../../types/props';
 
 import { Stack, useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 
 function trackAction() {
@@ -139,12 +142,13 @@ function resetIdentities() {
 const CoreView = () => {
   const router = useRouter();
   const [log, setLog] = useState('');
+  const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75, paddingBottom: 100}}>
         <Button onPress={() => router.back()} title="Go to main page" />
-        <Text style={styles.welcome}>Core</Text>
+        <ThemedText style={styles.welcome}>Core</ThemedText>
         <Button title="extensionVersion()" onPress={() => coreExtensionVersion(setLog)} />
         <Button title="updateConfiguration" onPress={updateConfiguration} />
         <Button title="clearUpdatedConfiguration" onPress={clearUpdatedConfiguration} />
@@ -167,21 +171,21 @@ const CoreView = () => {
           onPress={dispatchEventWithResponseCallback}
         />
         <Button title="resetIdentities()" onPress={resetIdentities} />
-        <Text style={styles.welcome}>Lifecycle</Text>
+        <ThemedText style={styles.welcome}>Lifecycle</ThemedText>
         <Button
           title="Lifecycle::extensionVersion()"
           onPress={() => lifecycleExtensionVersion(setLog)}
         />
-        <Text style={styles.welcome}>Signal</Text>
+        <ThemedText style={styles.welcome}>Signal</ThemedText>
         <Button
           title="Signal::extensionVersion()"
           onPress={() => signalExtensionVersion(setLog)}
         />
         {log ? (
-          <Text style={{ marginTop: 24, color: '#333', fontSize: 16, textAlign: 'center' }}>{log}</Text>
+          <ThemedText style={{ marginTop: 24, color: theme.colors.text, fontSize: 16, textAlign: 'center' }}>{log}</ThemedText>
         ) : null}
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

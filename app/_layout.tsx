@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider, useTheme } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
@@ -12,9 +12,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  
   const scheme = useColorScheme();
   const isFocused = useIsFocused();
+  const { colors } = useTheme();
 
   useEffect(() => {
     // Hide the splash screen after the app is ready
@@ -34,7 +34,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Drawer>
+      <Drawer
+        screenOptions={{
+          headerTintColor: colors.text,
+          headerStyle: { backgroundColor: colors.background },
+        }}
+      >
         <Drawer.Screen name="index" options={{ title: 'Technical View' }} />
         <Drawer.Screen name="(techScreens)/AppIdConfigView" options={{ title: 'App ID Config', drawerItemStyle: { display: 'none' } }} />
         <Drawer.Screen name="(techScreens)/AssuranceView" options={{ title: 'Assurance', drawerItemStyle: { display: 'none' } }} />

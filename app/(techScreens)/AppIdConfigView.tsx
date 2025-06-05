@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const { AppIdModule } = NativeModules;
 const APP_ID_STORAGE_KEY = '@adobe_app_id';
@@ -11,6 +14,7 @@ const APP_ID_STORAGE_KEY = '@adobe_app_id';
 const AppIdConfigView = () => {
   const [appId, setAppId] = useState('');
   const router = useRouter();
+  const theme = useTheme();
 
   useEffect(() => {
     // Load saved App ID when component mounts
@@ -51,29 +55,31 @@ const AppIdConfigView = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{ marginTop: 75, paddingBottom: 100 }}>
         <Button onPress={() => router.back()} title="Go to main page" />
-        <Text style={styles.welcome}>Adobe App ID Configuration</Text>
-        <Text style={styles.text}>Enter your Adobe Launch App ID:</Text>
+        <ThemedText style={styles.welcome}>Adobe App ID Configuration</ThemedText>
+        <ThemedText style={styles.text}>Enter your Adobe Launch App ID:</ThemedText>
         <TextInput
           style={{
             height: 40,
-            borderColor: 'gray',
+            borderColor: theme.colors.border,
             borderWidth: 1,
             margin: 10,
             padding: 10,
+            backgroundColor: theme.colors.background,
+            color: theme.colors.text,
           }}
           value={appId}
           onChangeText={setAppId}
           placeholder="Enter App ID"
         />
         <Button title="Save App ID" onPress={saveAppId} />
-        <Text style={styles.text}>
+        <ThemedText style={styles.text}>
           Current App ID: {appId || 'Not configured'}
-        </Text>
+        </ThemedText>
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

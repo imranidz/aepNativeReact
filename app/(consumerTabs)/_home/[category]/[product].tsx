@@ -59,15 +59,19 @@ export const options = {
 };
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { ThemedView } from '../../../../components/ThemedView';
+import { ThemedText } from '../../../../components/ThemedText';
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { useTheme } from '@react-navigation/native';
 
 
 export default function ProductDetail() {
   const { category, product } = useLocalSearchParams<{ category: string; product: string }>();
   const router = useRouter();
   const [added, setAdded] = useState(false);
+  const { colors } = useTheme();
 
   // Find the product in the category
   const products = CATEGORY_OPTIONS[category ?? ''] || [];
@@ -79,12 +83,12 @@ export default function ProductDetail() {
 
   if (!productData) {
     return (
-      <View style={styles.container}>
-        <Text>Product not found.</Text>
+      <ThemedView style={styles.container}>
+        <ThemedText>Product not found.</ThemedText>
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <Text style={styles.backButtonText}>{'< Back'}</Text>
+          <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
         </TouchableOpacity>
-      </View>
+      </ThemedView>
     );
   }
 
@@ -102,29 +106,31 @@ export default function ProductDetail() {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
+        <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
       </TouchableOpacity>
       <View style={styles.image} />
-      <Text style={styles.title}>{productData.name}</Text>
-      <Text style={styles.description}>{productData.description}</Text>
-      <Text style={styles.price}>${productData.price.toFixed(2)}</Text>
+      <ThemedText style={styles.title}>{productData.name}</ThemedText>
+      <ThemedText style={styles.description}>{productData.description}</ThemedText>
+      <ThemedText style={styles.price}>${productData.price.toFixed(2)}</ThemedText>
       <TouchableOpacity
-        style={[styles.addToCartButton, added && styles.added]}
+        style={[
+          styles.addToCartButton,
+          { backgroundColor: added ? (colors.notification || '#4caf50') : colors.primary },
+        ]}
         onPress={handleAddToCart}
         disabled={added}
       >
-        <Text style={styles.addToCartText}>{added ? 'Added!' : 'Add to Cart'}</Text>
+        <ThemedText style={styles.addToCartText}>{added ? 'Added!' : 'Add to Cart'}</ThemedText>
       </TouchableOpacity>
-    </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8',
     alignItems: 'center',
     paddingTop: 48,
     paddingHorizontal: 24,
@@ -148,34 +154,28 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#2e3d49',
     marginBottom: 12,
     textAlign: 'center',
   },
   description: {
     fontSize: 16,
-    color: '#4a5a6a',
     textAlign: 'center',
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#007AFF',
     marginVertical: 12,
   },
   addToCartButton: {
-    backgroundColor: '#007AFF',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
     marginTop: 16,
   },
   addToCartText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
   added: {
-    backgroundColor: '#4caf50',
   },
 }); 

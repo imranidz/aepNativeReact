@@ -58,13 +58,17 @@ export const options = {
 };
 
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 export default function CategoryProductList() {
   const { category } = useLocalSearchParams<{ category: string }>();
   const router = useRouter();
   const products = CATEGORY_OPTIONS[category ?? ''] || [];
+  const { colors } = useTheme();
 
   console.log('Rendering CategoryProductList');
 
@@ -84,25 +88,25 @@ export default function CategoryProductList() {
   };
 
   const renderProduct = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.card} onPress={() => handleProductPress(item.name)}>
-      <View style={styles.cardImage} />
+    <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]} onPress={() => handleProductPress(item.name)}>
+      <View style={[styles.cardImage, { backgroundColor: colors.border }]} />
       <View style={{ flex: 1 }}>
-        <Text style={styles.cardTitle}>{item.name}</Text>
-        <Text style={styles.cardDescription}>{item.description}</Text>
+        <ThemedText style={styles.cardTitle}>{item.name}</ThemedText>
+        <ThemedText style={styles.cardDescription}>{item.description}</ThemedText>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
-      <Text style={styles.header}>{category ? category.charAt(0).toUpperCase() + category.slice(1) : ''} Products</Text>
+    <ThemedView style={{ flex: 1 }}>
+      <ThemedText style={styles.header}>{category ? category.charAt(0).toUpperCase() + category.slice(1) : ''} Products</ThemedText>
       <FlatList
         data={products}
         renderItem={renderProduct}
         keyExtractor={item => item.name}
         contentContainerStyle={styles.list}
       />
-    </View>
+    </ThemedView>
   );
 }
 
@@ -113,7 +117,6 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 16,
     textAlign: 'center',
-    color: '#2e3d49',
   },
   list: {
     paddingHorizontal: 16,
@@ -122,7 +125,6 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 12,
     marginVertical: 8,
     padding: 16,
@@ -135,18 +137,15 @@ const styles = StyleSheet.create({
   cardImage: {
     width: 64,
     height: 64,
-    backgroundColor: '#cce3de',
     borderRadius: 12,
     marginRight: 16,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2e3d49',
     marginBottom: 4,
   },
   cardDescription: {
     fontSize: 14,
-    color: '#4a5a6a',
   },
 }); 

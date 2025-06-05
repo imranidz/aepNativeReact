@@ -11,11 +11,14 @@ governing permissions and limitations under the License.
 */
 
 import React, {useState} from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {Consent} from '@adobe/react-native-aepedgeconsent';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 function updateCollectConsent(allowed: boolean) {
   var collectConsentStatus = allowed ? {val: 'y'} : {val: 'n'};
@@ -43,6 +46,7 @@ const ConsentView = () => {
   const [consents, setConsents] = useState('');
   Consent.extensionVersion().then(version => setVersion(version));
   const router = useRouter();
+  const theme = useTheme();
 
   function getConsents() {
     var consents = {consents: {collect: {val: 'n'}}};
@@ -64,10 +68,10 @@ const ConsentView = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Consent v{version}</Text>
+        <ThemedText style={styles.welcome}>Consent v{version}</ThemedText>
         <Button
           title="Set Default Consent - Yes"
           onPress={() => setDefaultConsent(true)}
@@ -82,9 +86,9 @@ const ConsentView = () => {
         />
         <Button title="Get Consents" onPress={getConsents} />
         <View style={styles.breakLine} />
-        <Text style={styles.text}>{consents}</Text>
+        <ThemedText style={styles.text}>{consents}</ThemedText>
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

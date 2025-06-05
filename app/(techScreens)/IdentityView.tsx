@@ -11,10 +11,13 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {Identity, MobileVisitorAuthenticationState} from '@adobe/react-native-aepcore';
 import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 function identityExtensionVersion() {
   Identity.extensionVersion().then(version =>
@@ -65,12 +68,13 @@ function getExperienceCloudId() {
 
 const IdentityView = () => {
     const router = useRouter();
+    const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Identity</Text>
+        <ThemedText style={styles.welcome}>Identity</ThemedText>
         <Button title="extensionVersion()" onPress={identityExtensionVersion} />
         <Button title="syncIdentifiers()" onPress={syncIdentifiers} />
         <Button
@@ -86,7 +90,7 @@ const IdentityView = () => {
         <Button title="getIdentifiers()" onPress={getIdentifiers} />
         <Button title="getExperienceCloudId()" onPress={getExperienceCloudId} />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

@@ -11,10 +11,13 @@ governing permissions and limitations under the License.
 */
 
 import React, {useState} from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {Edge, ExperienceEvent} from '@adobe/react-native-aepedge';
 import styles from '../../styles/styles';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const EdgeView = () => {
 
@@ -22,6 +25,7 @@ const EdgeView = () => {
   const [eventHandles, setEventHandles] = useState('');
   const [locationHint, getlocationHintText] = useState('');
   const router = useRouter();
+  const theme = useTheme();
 
   Edge.extensionVersion().then(version => setVersion(version));
 
@@ -108,10 +112,10 @@ const EdgeView = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button  onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Edge v{version}</Text>
+        <ThemedText style={styles.welcome}>Edge v{version}</ThemedText>
         <Button
           title="sendEventWithParams"
           onPress={() => sendEventWithParams()}
@@ -133,7 +137,7 @@ const EdgeView = () => {
           title="sendEvent() with DatastreamConfigOverride"
           onPress={() => sendEventDataStreamConfigOverride()}
         />
-        <Text style={styles.text}>Response event handles: {eventHandles}</Text>
+        <ThemedText style={styles.text}>Response event handles: {eventHandles}</ThemedText>
         <Button
           title="setLocationHint(va6)"
           onPress={() => Edge.setLocationHint('va6')}
@@ -143,9 +147,9 @@ const EdgeView = () => {
           onPress={() => Edge.setLocationHint(null)}
         />
         <Button title="getLocationHint()" onPress={() => getLocationHint()} />
-        <Text style={styles.text}>Location Hint: {locationHint}</Text>
+        <ThemedText style={styles.text}>Location Hint: {locationHint}</ThemedText>
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 };
 

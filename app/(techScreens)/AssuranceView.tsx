@@ -21,30 +21,35 @@ import {
 } from 'react-native';
 import {Assurance} from '@adobe/react-native-aepassurance';
 import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const AssuranceView = () => {
   const [version, setVersion] = useState('');
   const [sessionURL, setsessionURL] = useState('your-assurance-url');
 
   const router = useRouter();
+  const theme = useTheme();
 
   Assurance.extensionVersion().then(version => {
     setVersion(version);
   });
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back}  title="Go to main page" />
-        <Text style={styles.welcome}>Assurance v{version}</Text>
+        <ThemedText style={styles.welcome}>Assurance v{version}</ThemedText>
         <Button title="Start Session" onPress={startSessionClicked} />
         <TextInput
-          style={{height: 40, margin: 10}}
+          style={{height: 40, margin: 10, backgroundColor: theme.colors.background, color: theme.colors.text}}
           placeholder="assurance://"
+          placeholderTextColor={theme.colors.text}
           onChangeText={val => setsessionURL(val)}
         />
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 
   function startSessionClicked() {
@@ -57,7 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 25,

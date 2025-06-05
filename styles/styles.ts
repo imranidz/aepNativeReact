@@ -16,7 +16,6 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 22,
@@ -27,7 +26,6 @@ export default StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     margin: 5,
-    backgroundColor: '#C1B7B5',
   },
   text: {
     fontSize: 15,
@@ -36,7 +34,6 @@ export default StyleSheet.create({
   },
   breakLine: {
     borderWidth: 0.5,
-    borderColor: 'black',
     margin: 10,
     marginTop: 10,
     marginBottom: 10,

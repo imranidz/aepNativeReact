@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
 console.log('Rendering HomeTab'); 
@@ -26,6 +28,7 @@ export default function HomeTab() {
   );
 
   const router = useRouter();
+  const { colors } = useTheme();
 
   const handleCategoryPress = (categoryKey: string) => {
     const path = `/(consumerTabs)/_home/${categoryKey}`;
@@ -34,26 +37,26 @@ export default function HomeTab() {
   };
 
   const renderCategory = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.card} onPress={() => handleCategoryPress(item.key)}>
+    <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]} onPress={() => handleCategoryPress(item.key)}>
       {/* Placeholder for image: replace with <Image source={require('...')} style={styles.cardImage} /> */}
-      <View style={styles.cardImage} />
+      <View style={[styles.cardImage, { backgroundColor: colors.border }]} />
       <View style={{ flex: 1 }}>
-        <Text style={styles.cardTitle}>{item.label}</Text>
-        <Text style={styles.cardDescription}>{item.description}</Text>
+        <ThemedText style={styles.cardTitle}>{item.label}</ThemedText>
+        <ThemedText style={styles.cardDescription}>{item.description}</ThemedText>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f8f8f8' }}>
-      <Text style={styles.header}>Explore Camping & Hiking</Text>
+    <ThemedView style={{ flex: 1 }}>
+      <ThemedText style={styles.header}>Explore Camping & Hiking</ThemedText>
       <FlatList
         data={CATEGORIES}
         renderItem={renderCategory}
         keyExtractor={item => item.key}
         contentContainerStyle={styles.list}
       />
-    </View>
+    </ThemedView>
   );
 }
 
@@ -64,7 +67,6 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 16,
     textAlign: 'center',
-    color: '#2e3d49',
   },
   list: {
     paddingHorizontal: 16,
@@ -73,7 +75,6 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     borderRadius: 12,
     marginVertical: 8,
     padding: 16,
@@ -86,18 +87,15 @@ const styles = StyleSheet.create({
   cardImage: {
     width: 64,
     height: 64,
-    backgroundColor: '#cce3de',
     borderRadius: 12,
     marginRight: 16,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2e3d49',
     marginBottom: 4,
   },
   cardDescription: {
     fontSize: 14,
-    color: '#4a5a6a',
   },
 });

@@ -11,11 +11,14 @@ governing permissions and limitations under the License.
 */
 
 import React, { useState } from 'react';
-import {Button, Text, View, ScrollView} from 'react-native';
+import {Button, View, ScrollView} from 'react-native';
 import {MobileCore} from '@adobe/react-native-aepcore';
 import {Messaging} from '@adobe/react-native-aepmessaging'
 import styles from '../../styles/styles';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { useTheme } from '@react-navigation/native';
 
 const SURFACES = ['android-cb-preview'];
 
@@ -69,12 +72,13 @@ const getLatestMessage = async () => {
 function MessagingView() {
   const router = useRouter();
   const [log, setLog] = useState('');
+  const theme = useTheme();
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
-        <Text style={styles.welcome}>Messaging</Text>
+        <ThemedText style={styles.welcome}>Messaging</ThemedText>
         <Button title="extensionVersion()" onPress={() => messagingExtensionVersion(setLog)} />
         <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
@@ -90,10 +94,10 @@ function MessagingView() {
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
         <Button title="trackAction()" onPress={trackAction} />
         {log ? (
-          <Text style={{ marginTop: 24, color: '#333', fontSize: 16, textAlign: 'center' }}>{log}</Text>
+          <ThemedText style={{ marginTop: 24, color: theme.colors.text, fontSize: 16, textAlign: 'center' }}>{log}</ThemedText>
         ) : null}
       </ScrollView>
-    </View>
+    </ThemedView>
   );
 }
 
