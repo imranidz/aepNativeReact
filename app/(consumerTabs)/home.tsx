@@ -2,21 +2,18 @@ import React, { useCallback } from 'react';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFocusEffect, useTheme } from '@react-navigation/native';
+import { useFocusEffect, useTheme, useNavigationState } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-console.log('Rendering HomeTab'); 
-const CATEGORIES = [
-  { key: 'family', label: 'Family', description: 'Gear and essentials for family camping adventures.' },
-  { key: 'men', label: "Men's", description: 'Outdoor apparel and equipment for men.' },
-  { key: 'women', label: "Women's", description: 'Outdoor apparel and equipment for women.' },
-  { key: 'travel', label: 'Travel', description: 'Lightweight and portable gear for travel.' },
-  { key: 'experiences', label: 'Experiences', description: 'Book guided hikes, camping weekends, and more.' },
-  { key: 'water', label: 'Water', description: 'Kayaks, dry bags, and water adventure gear.' },
-  { key: 'desert', label: 'Desert', description: 'Gear for desert camping and sun protection.' },
-  { key: 'mountain', label: 'Mountain', description: 'Equipment for mountain and alpine adventures.' },
-];
+import productsData from '../productData/bootcamp_products.json';
+
+// Extract unique categories from the JSON data
+const CATEGORIES = Array.from(new Set(productsData.map(product => product.product.categories.primary))).map(category => ({
+  key: category.toLowerCase(),
+  label: category.charAt(0).toUpperCase() + category.slice(1),
+  description: `${category} related products.`
+}));
 
 const CATEGORY_ICONS: { [key: string]: string } = {
   family: 'people',
@@ -30,17 +27,21 @@ const CATEGORY_ICONS: { [key: string]: string } = {
 };
 
 export default function HomeTab() {
+  const router = useRouter();
+  const { colors } = useTheme();
+  const navigationState = useNavigationState(state => state);
+  const previousRouteName = navigationState.routes[navigationState.index - 1]?.name || 'Unknown';
+
   useFocusEffect(
     useCallback(() => {
       MobileCore.trackState('HomeTab', {
-        'web.webPageDetails.name': 'Home',
-        'application.name': 'AEPSampleApp',
+        'view.name': 'Home',
+        'navigation.previousView': previousRouteName,
+        'application.name': 'WeRetailMobileApp',
+        'timestamp': new Date().toISOString(),
       });
-    }, [])
+    }, [previousRouteName])
   );
-
-  const router = useRouter();
-  const { colors } = useTheme();
 
   const handleCategoryPress = (categoryKey: string) => {
     const path = `/(consumerTabs)/_home/${categoryKey}`;

@@ -11,7 +11,7 @@ export default function OffersTab() {
     useCallback(() => {
       MobileCore.trackState('OffersTab', {
         'web.webPageDetails.name': 'Offers',
-        'application.name': 'AEPSampleApp',
+        'application.name': 'WeRetailMobileApp',
       });
       console.log('OffersTab viewed - trigger Adobe tracking here');
     }, [])

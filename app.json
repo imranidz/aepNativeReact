@@ -1,27 +1,27 @@
 {
   "expo": {
-    "name": "AEPSampleAppNewArchEnabled",
-    "slug": "AEPSampleAppNewArchEnabled",
+    "name": "WeRetail",
+    "slug": "WeRetail",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ea-logo-horizontal.png",
+    "icon": "./assets/images/productImages/weretail-logo.svg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/ea-logo-horizontal.png",
+      "image": "./assets/images/productImages/weretail-logo.svg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.AEPSampleAppNewArchEnabled"
+      "bundleIdentifier": "com.WeRetail"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ea-logo-horizontal.png",
+        "foregroundImage": "./assets/images/productImages/weretail-logo.svg",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.AEPSampleAppNewArchEnabled"
+      "package": "com.WeRetail"
     },
     "web": {
       "bundler": "metro",

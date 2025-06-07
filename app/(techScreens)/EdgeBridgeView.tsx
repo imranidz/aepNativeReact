@@ -28,15 +28,23 @@ const EdgeBridgeView = () => {
   const router = useRouter();
 
 function trackAction() {
-  MobileCore.trackAction("purchase", { "&&products": ";Running Shoes;1;69.95;event1|event2=55.99;eVar1=12345,;Running Socks;10;29.99;event2=10.95;eVar1=54321",
-  "&&events": "event5,purchase",
-  "myapp.promotion": "a0138"});
+  MobileCore.trackAction("purchase", {
+    "&&products": ";Running Shoes;1;69.95;event1|event2=55.99;eVar1=12345,;Running Socks;10;29.99;event2=10.95;eVar1=54321",
+    "cart.totalValue": "99.90",
+    "cart.itemCount": "2",
+    "user.id": "user123",
+    "timestamp": new Date().toISOString()
+  });
 }
 
 function trackState() {
-  MobileCore.trackState("products/189025/runningshoes/12345", {"&&products": ";Running Shoes;1;69.95;prodView|event2=55.99;eVar1=12345",
-  "myapp.category": "189025",
-  "myapp.promotion": "a0138"});
+  MobileCore.trackState("products/189025/runningshoes/12345", {
+    "&&products": ";Running Shoes;1;69.95;prodView|event2=55.99;eVar1=12345",
+    "view.name": "Product Detail",
+    "navigation.previousView": "Home",
+    "user.id": "user123",
+    "timestamp": new Date().toISOString()
+  });
 }
 
   return (

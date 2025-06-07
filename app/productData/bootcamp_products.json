@@ -1,0 +1,782 @@
+[
+  {
+    "sku": "meotsuamt",
+    "product": {
+      "name": "Amsterdam Short Sleeve Travel Shirt",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shirt"
+      },
+      "price": 39.0,
+      "image": "meotsuamt.svg",
+      "description": "Amsterdam Short Sleeve Travel Shirt is a Shirt priced at $39.0."
+    }
+  },
+  {
+    "sku": "meotsuann",
+    "product": {
+      "name": "Analog Dark Wash Jean",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Pants"
+      },
+      "price": 98.0,
+      "image": "meotsuann.svg",
+      "description": "Analog Dark Wash Jean is a Pants priced at $98.0."
+    }
+  },
+  {
+    "sku": "eqswsuaqr",
+    "product": {
+      "name": "Aqua Force Gps Fitness Monitor",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 200.0,
+      "image": "eqswsuaqr.svg",
+      "description": "Aqua Force Gps Fitness Monitor is a Watersports priced at $200.0."
+    }
+  },
+  {
+    "sku": "woswsubas",
+    "product": {
+      "name": "Bahamas Shorts",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shorts"
+      },
+      "price": 38.0,
+      "image": "woswsubas.svg",
+      "description": "Bahamas Shorts is a Shorts priced at $38.0."
+    }
+  },
+  {
+    "sku": "30941863",
+    "product": {
+      "name": "Basa MP3 Player",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Running"
+      },
+      "price": 199.99,
+      "image": "30941863.svg",
+      "description": "Basa MP3 Player is a Running priced at $199.99."
+    }
+  },
+  {
+    "sku": "eqsusubed",
+    "product": {
+      "name": "Bear 8x8 Longboard",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 1100.0,
+      "image": "eqsusubed.svg",
+      "description": "Bear 8x8 Longboard is a Surfing priced at $1100.0."
+    }
+  },
+  {
+    "sku": "eqbisublp",
+    "product": {
+      "name": "Blast Mini Pump",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Biking"
+      },
+      "price": 15.0,
+      "image": "eqbisublp.svg",
+      "description": "Blast Mini Pump is a Biking priced at $15.0."
+    }
+  },
+  {
+    "sku": "eqrusubpe",
+    "product": {
+      "name": "BPA Free Water Bottle",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Running"
+      },
+      "price": 18.0,
+      "image": "eqrusubpe.svg",
+      "description": "BPA Free Water Bottle is a Running priced at $18.0."
+    }
+  },
+  {
+    "sku": "meotwibrt",
+    "product": {
+      "name": "Brooklyn Coat",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Coats"
+      },
+      "price": 89.0,
+      "image": "meotwibrt.svg",
+      "description": "Brooklyn Coat is a Coats priced at $89.0."
+    }
+  },
+  {
+    "sku": "mehisubus",
+    "product": {
+      "name": "Buffalo Plaid Shorts",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shorts"
+      },
+      "price": 32.0,
+      "image": "mehisubus.svg",
+      "description": "Buffalo Plaid Shorts is a Shorts priced at $32.0."
+    }
+  },
+  {
+    "sku": "eqswsucal",
+    "product": {
+      "name": "Cabana Stripe Towel",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 18.0,
+      "image": "eqswsucal.svg",
+      "description": "Cabana Stripe Towel is a Watersports priced at $18.0."
+    }
+  },
+  {
+    "sku": "wohisucat",
+    "product": {
+      "name": "Candide Trail Short",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shorts"
+      },
+      "price": 48.0,
+      "image": "wohisucat.svg",
+      "description": "Candide Trail Short is a Shorts priced at $48.0."
+    }
+  },
+  {
+    "sku": "eqsusuchd",
+    "product": {
+      "name": "Chasing Tail Surfboard",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 785.0,
+      "image": "eqsusuchd.svg",
+      "description": "Chasing Tail Surfboard is a Surfing priced at $785.0."
+    }
+  },
+  {
+    "sku": "meotwicls",
+    "product": {
+      "name": "Classic Leather Gloves",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Gloves"
+      },
+      "price": 38.0,
+      "image": "meotwicls.svg",
+      "description": "Classic Leather Gloves is a Gloves priced at $38.0."
+    }
+  },
+  {
+    "sku": "eqbisucos",
+    "product": {
+      "name": "Comfort Gel Gloves",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Biking"
+      },
+      "price": 30.0,
+      "image": "eqbisucos.svg",
+      "description": "Comfort Gel Gloves is a Biking priced at $30.0."
+    }
+  },
+  {
+    "sku": "eqbisucol",
+    "product": {
+      "name": "Compact Chain Tool",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Biking"
+      },
+      "price": 15.0,
+      "image": "eqbisucol.svg",
+      "description": "Compact Chain Tool is a Biking priced at $15.0."
+    }
+  },
+  {
+    "sku": "mehisucos",
+    "product": {
+      "name": "Corona Shorts",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shorts"
+      },
+      "price": 39.0,
+      "image": "mehisucos.svg",
+      "description": "Corona Shorts is a Shorts priced at $39.0."
+    }
+  },
+  {
+    "sku": "eqsmcz",
+    "product": {
+      "name": "Cuzco Backpack",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Hiking"
+      },
+      "price": 210.0,
+      "image": "eqsmcz.svg",
+      "description": "Cuzco Backpack is a Hiking priced at $210.0."
+    }
+  },
+  {
+    "sku": "wohisudes",
+    "product": {
+      "name": "Desert Sky Shorts",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shorts"
+      },
+      "price": 35.0,
+      "image": "wohisudes.svg",
+      "description": "Desert Sky Shorts is a Shorts priced at $35.0."
+    }
+  },
+  {
+    "sku": "wootsudet",
+    "product": {
+      "name": "Devi Sleeveless Shirt",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shirt"
+      },
+      "price": 45.0,
+      "image": "wootsudet.svg",
+      "description": "Devi Sleeveless Shirt is a Shirt priced at $45.0."
+    }
+  },
+  {
+    "sku": "meotwidot",
+    "product": {
+      "name": "Double Breasted Raincoat",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Coats"
+      },
+      "price": 105.0,
+      "image": "meotwidot.svg",
+      "description": "Double Breasted Raincoat is a Coats priced at $105.0."
+    }
+  },
+  {
+    "sku": "meskwielt",
+    "product": {
+      "name": "El Gordo Down Jacket",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Coats"
+      },
+      "price": 119.0,
+      "image": "meskwielt.svg",
+      "description": "El Gordo Down Jacket is a Coats priced at $119.0."
+    }
+  },
+  {
+    "sku": "eqsusuely",
+    "product": {
+      "name": "El Greco 8' Shorty",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 750.0,
+      "image": "eqsusuely.svg",
+      "description": "El Greco 8' Shorty is a Surfing priced at $750.0."
+    }
+  },
+  {
+    "sku": "meotsuett",
+    "product": {
+      "name": "Eton Short Sleeve Shirt",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shirt"
+      },
+      "price": 24.0,
+      "image": "meotsuett.svg",
+      "description": "Eton Short Sleeve Shirt is a Shirt priced at $24.0."
+    }
+  },
+  {
+    "sku": "eqsusuevd",
+    "product": {
+      "name": "Even Keel Paddleboard",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Surfing"
+      },
+      "price": 800.0,
+      "image": "eqsusuevd.svg",
+      "description": "Even Keel Paddleboard is a Surfing priced at $800.0."
+    }
+  },
+  {
+    "sku": "mehiwiext",
+    "product": {
+      "name": "Expedition Tech Long Sleeved Shirt",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shirt"
+      },
+      "price": 54.0,
+      "image": "mehiwiext.svg",
+      "description": "Expedition Tech Long Sleeved Shirt is a Shirt priced at $54.0."
+    }
+  },
+  {
+    "sku": "116138647",
+    "product": {
+      "name": "Faba Running Pants",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Pants"
+      },
+      "price": 39.99,
+      "image": "116138647.svg",
+      "description": "Faba Running Pants is a Pants priced at $39.99."
+    }
+  },
+  {
+    "sku": "eqrusufle",
+    "product": {
+      "name": "Fleet Cross Training Shoe",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Running"
+      },
+      "price": 65.0,
+      "image": "eqrusufle.svg",
+      "description": "Fleet Cross Training Shoe is a Running priced at $65.0."
+    }
+  },
+  {
+    "sku": "wohisufls",
+    "product": {
+      "name": "Fleet Fox Running Shorts",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shorts"
+      },
+      "price": 35.0,
+      "image": "wohisufls.svg",
+      "description": "Fleet Fox Running Shorts is a Shorts priced at $35.0."
+    }
+  },
+  {
+    "sku": "eqwrsnbd",
+    "product": {
+      "name": "Flying Snowboard",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Snow-Sports"
+      },
+      "price": 599.0,
+      "image": "eqwrsnbd.svg",
+      "description": "Flying Snowboard is a Snow-Sports priced at $599.0."
+    }
+  },
+  {
+    "sku": "eqrusugor",
+    "product": {
+      "name": "Gomobile Fitness Monitorsmart Music Player",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Running"
+      },
+      "price": 150.0,
+      "image": "eqrusugor.svg",
+      "description": "Gomobile Fitness Monitorsmart Music Player is a Running priced at $150.0."
+    }
+  },
+  {
+    "sku": "331050524",
+    "product": {
+      "name": "Hiking Pants",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Pants"
+      },
+      "price": 86.99,
+      "image": "331050524.svg",
+      "description": "Hiking Pants is a Pants priced at $86.99."
+    }
+  },
+  {
+    "sku": "170227049",
+    "product": {
+      "name": "Hiking Poles",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Hiking"
+      },
+      "price": 79.99,
+      "image": "170227049.svg",
+      "description": "Hiking Poles is a Hiking priced at $79.99."
+    }
+  },
+  {
+    "sku": "mehisulat",
+    "product": {
+      "name": "Laguna Short Sleeve Shirt",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shirt"
+      },
+      "price": 42.0,
+      "image": "mehisulat.svg",
+      "description": "Laguna Short Sleeve Shirt is a Shirt priced at $42.0."
+    }
+  },
+  {
+    "sku": "eqswsumak",
+    "product": {
+      "name": "Manta Ray Snorkel And Dive Mask",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 50.0,
+      "image": "eqswsumak.svg",
+      "description": "Manta Ray Snorkel And Dive Mask is a Watersports priced at $50.0."
+    }
+  },
+  {
+    "sku": "eqbisumas",
+    "product": {
+      "name": "Marin Mountain Bike Shoes",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Footwear"
+      },
+      "price": 110.0,
+      "image": "eqbisumas.svg",
+      "description": "Marin Mountain Bike Shoes is a Footwear priced at $110.0."
+    }
+  },
+  {
+    "sku": "meskwimis",
+    "product": {
+      "name": "Midweight Fleece Gloves",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Gloves"
+      },
+      "price": 30.0,
+      "image": "meskwimis.svg",
+      "description": "Midweight Fleece Gloves is a Gloves priced at $30.0."
+    }
+  },
+  {
+    "sku": "eqbisumxs",
+    "product": {
+      "name": "Mx121 Sport Pedals",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Biking"
+      },
+      "price": 65.0,
+      "image": "eqbisumxs.svg",
+      "description": "Mx121 Sport Pedals is a Biking priced at $65.0."
+    }
+  },
+  {
+    "sku": "mesusupis",
+    "product": {
+      "name": "Pipeline Board Shorts",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shorts"
+      },
+      "price": 24.0,
+      "image": "mesusupis.svg",
+      "description": "Pipeline Board Shorts is a Shorts priced at $24.0."
+    }
+  },
+  {
+    "sku": "meotwipot",
+    "product": {
+      "name": "Portland Hooded Jacket",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Coats"
+      },
+      "price": 75.0,
+      "image": "meotwipot.svg",
+      "description": "Portland Hooded Jacket is a Coats priced at $75.0."
+    }
+  },
+  {
+    "sku": "eqswsuprs",
+    "product": {
+      "name": "Pro Series Swim Goggles",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 25.0,
+      "image": "eqswsuprs.svg",
+      "description": "Pro Series Swim Goggles is a Watersports priced at $25.0."
+    }
+  },
+  {
+    "sku": "eqswsupus",
+    "product": {
+      "name": "Pufferfish Snorkeling Fins",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 25.0,
+      "image": "eqswsupus.svg",
+      "description": "Pufferfish Snorkeling Fins is a Watersports priced at $25.0."
+    }
+  },
+  {
+    "sku": "90019930",
+    "product": {
+      "name": "Purple Gloves",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Gloves"
+      },
+      "price": 24.99,
+      "image": "90019930.svg",
+      "description": "Purple Gloves is a Gloves priced at $24.99."
+    }
+  },
+  {
+    "sku": "wohisurit",
+    "product": {
+      "name": "Rios T Shirt",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shirt"
+      },
+      "price": 39.0,
+      "image": "wohisurit.svg",
+      "description": "Rios T Shirt is a Shirt priced at $39.0."
+    }
+  },
+  {
+    "sku": "eqsusurud",
+    "product": {
+      "name": "Rusty Parrot Shortboad",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 895.0,
+      "image": "eqsusurud.svg",
+      "description": "Rusty Parrot Shortboad is a Surfing priced at $895.0."
+    }
+  },
+  {
+    "sku": "eqswsuses",
+    "product": {
+      "name": "Seastar Flip Flops",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Watersports"
+      },
+      "price": 28.0,
+      "image": "eqswsuses.svg",
+      "description": "Seastar Flip Flops is a Watersports priced at $28.0."
+    }
+  },
+  {
+    "sku": "eqbisuset",
+    "product": {
+      "name": "Sequoia Bike Helmet",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Biking"
+      },
+      "price": 75.0,
+      "image": "eqbisuset.svg",
+      "description": "Sequoia Bike Helmet is a Biking priced at $75.0."
+    }
+  },
+  {
+    "sku": "woskwislt",
+    "product": {
+      "name": "Sleek Insulated Coat",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Snow-Sports"
+      },
+      "price": 75.0,
+      "image": "woskwislt.svg",
+      "description": "Sleek Insulated Coat is a Snow-Sports priced at $75.0."
+    }
+  },
+  {
+    "sku": "meotwislt",
+    "product": {
+      "name": "Slopeside Coat",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Coats"
+      },
+      "price": 139.0,
+      "image": "meotwislt.svg",
+      "description": "Slopeside Coat is a Coats priced at $139.0."
+    }
+  },
+  {
+    "sku": "mehisusls",
+    "product": {
+      "name": "Slot Canyon Active Shorts",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shorts"
+      },
+      "price": 39.0,
+      "image": "mehisusls.svg",
+      "description": "Slot Canyon Active Shorts is a Shorts priced at $39.0."
+    }
+  },
+  {
+    "sku": "woswsusoc",
+    "product": {
+      "name": "Soleil Tunic",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Shirt"
+      },
+      "price": 69.0,
+      "image": "woswsusoc.svg",
+      "description": "Soleil Tunic is a Shirt priced at $69.0."
+    }
+  },
+  {
+    "sku": "wootwisot",
+    "product": {
+      "name": "Sonja Insulated Jacket",
+      "categories": {
+        "primary": "Women",
+        "secondary": "Coats"
+      },
+      "price": 189.0,
+      "image": "wootwisot.svg",
+      "description": "Sonja Insulated Jacket is a Coats priced at $189.0."
+    }
+  },
+  {
+    "sku": "84391210",
+    "product": {
+      "name": "Spixa Runners",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Running"
+      },
+      "price": 119.99,
+      "image": "84391210.svg",
+      "description": "Spixa Runners is a Running priced at $119.99."
+    }
+  },
+  {
+    "sku": "mehisusts",
+    "product": {
+      "name": "Stretch Fatigue Shorts",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Shorts"
+      },
+      "price": 44.0,
+      "image": "mehisusts.svg",
+      "description": "Stretch Fatigue Shorts is a Shorts priced at $44.0."
+    }
+  },
+  {
+    "sku": "meotwisus",
+    "product": {
+      "name": "Sussex Rain Boots",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Footwear"
+      },
+      "price": 65.0,
+      "image": "meotwisus.svg",
+      "description": "Sussex Rain Boots is a Footwear priced at $65.0."
+    }
+  },
+  {
+    "sku": "eqsusutho",
+    "product": {
+      "name": "The Neutrino",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 695.0,
+      "image": "eqsusutho.svg",
+      "description": "The Neutrino is a Surfing priced at $695.0."
+    }
+  },
+  {
+    "sku": "eqsusuthd",
+    "product": {
+      "name": "The Stretch Longboard",
+      "categories": {
+        "primary": "Equipment",
+        "secondary": "Surfing"
+      },
+      "price": 900.0,
+      "image": "eqsusuthd.svg",
+      "description": "The Stretch Longboard is a Surfing priced at $900.0."
+    }
+  },
+  {
+    "sku": "mehisutrs",
+    "product": {
+      "name": "Trail Model Pants",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Pants"
+      },
+      "price": 69.0,
+      "image": "mehisutrs.svg",
+      "description": "Trail Model Pants is a Pants priced at $69.0."
+    }
+  },
+  {
+    "sku": "meotsutrs",
+    "product": {
+      "name": "Tribeca Cargo Pants",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Pants"
+      },
+      "price": 65.0,
+      "image": "meotsutrs.svg",
+      "description": "Tribeca Cargo Pants is a Pants priced at $65.0."
+    }
+  },
+  {
+    "sku": "meotwizuf",
+    "product": {
+      "name": "Zurich Wool Scarf",
+      "categories": {
+        "primary": "Men",
+        "secondary": "Scarf"
+      },
+      "price": 45.0,
+      "image": "meotwizuf.svg",
+      "description": "Zurich Wool Scarf is a Scarf priced at $45.0."
+    }
+  }
+]

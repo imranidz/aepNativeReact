@@ -11,8 +11,10 @@ export default function CartTab() {
   useFocusEffect(
     useCallback(() => {
       MobileCore.trackState('CartTab', {
-        'web.webPageDetails.name': 'Cart',
-        'application.name': 'AEPSampleApp',
+        'cart.totalValue': '150.00',
+        'cart.itemCount': '3',
+        'user.id': 'user123',
+        'timestamp': new Date().toISOString()
       });
       console.log('CartTab viewed - trigger Adobe tracking here');
     }, [])

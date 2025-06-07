@@ -6,6 +6,9 @@ import { useTheme } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { Identity, AuthenticatedState, IdentityMap, IdentityItem } from '@adobe/react-native-aepedgeidentity';
+import Clipboard from '@react-native-clipboard/clipboard';
+import { UserProfile } from '@adobe/react-native-aepuserprofile';
 
 export default function ProfileTab() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -17,14 +20,22 @@ export default function ProfileTab() {
   const [inputPassword, setInputPassword] = useState('');
   const [error, setError] = useState('');
   const { colors } = useTheme();
+  const [ecid, setEcid] = useState('');
+  const [identityMap, setIdentityMap] = useState({});
 
   useFocusEffect(
     useCallback(() => {
       MobileCore.trackState('ProfileTab', {
         'web.webPageDetails.name': 'Profile',
-        'application.name': 'AEPSampleApp',
+        'application.name': 'WeRetailMobileApp',
       });
       console.log('ProfileTab viewed - trigger Adobe tracking here');
+
+      // Fetch ECID
+      Identity.getExperienceCloudId().then(setEcid);
+
+      // Fetch Identity Map
+      Identity.getIdentities().then(setIdentityMap);
     }, [])
   );
 
@@ -45,6 +56,24 @@ export default function ProfileTab() {
       email: inputEmail,
     });
     console.log('User logged in - trigger Adobe login tracking here');
+
+    // Update user profile in AEP
+    UserProfile.updateUserAttributes({
+      firstName: inputFirstName,
+      email: inputEmail,
+    });
+    console.log('User profile updated in AEP');
+
+    // Create an IdentityMap and add the email and ECID identities
+    const identityMap = new IdentityMap();
+    const emailIdentity = new IdentityItem(inputEmail, AuthenticatedState.AUTHENTICATED, true);
+    const ecidIdentity = new IdentityItem(ecid, AuthenticatedState.AUTHENTICATED, false);
+    identityMap.addItem(emailIdentity, 'Email');
+    identityMap.addItem(ecidIdentity, 'ECID');
+
+    // Update identities in AEP
+    Identity.updateIdentities(identityMap);
+    console.log('Email and ECID set as authenticated identities in AEP');
   };
 
   const handleLogout = () => {
@@ -61,6 +90,11 @@ export default function ProfileTab() {
     console.log('User logged out - trigger Adobe logout tracking here');
   };
 
+  const copyToClipboard = (text: string) => {
+    Clipboard.setString(text);
+    console.log('Text copied to clipboard:', text);
+  };
+
   return (
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Ionicons name="person" size={48} color={colors.primary} />
@@ -70,6 +104,9 @@ export default function ProfileTab() {
           <>
             <ThemedText style={{ marginBottom: 12 }}>Welcome, {firstName}!</ThemedText>
             <ThemedText style={{ marginBottom: 12 }}>Email: {email}</ThemedText>
+            <ThemedText style={{ marginBottom: 12 }}>ECID: {ecid}</ThemedText>
+            <ThemedText style={{ marginBottom: 12 }}>Identity Map: {JSON.stringify(identityMap)}</ThemedText>
+            <Button title="Copy Identity Map" onPress={() => copyToClipboard(JSON.stringify(identityMap))} />
             <Button title="Log Out" onPress={handleLogout} />
           </>
         ) : (
