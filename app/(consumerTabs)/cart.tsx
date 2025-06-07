@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
-import { View, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useCart } from '../../components/CartContext';
+import { PRODUCT_IMAGES } from './_home/[category]';
 
 export default function CartTab() {
   useFocusEffect(
@@ -20,7 +21,26 @@ export default function CartTab() {
     }, [])
   );
 
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    card: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 12,
+      marginVertical: 8,
+      padding: 16,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 2 },
+    },
+  });
+
   const { cart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+
+  const modifiedCart = cart.map(item => ({ ...item, sku: item.sku || 'defaultSku' }));
 
   return (
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 }}>

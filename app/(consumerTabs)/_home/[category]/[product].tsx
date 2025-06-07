@@ -1,4 +1,5 @@
 import productsData from '../../../productData/bootcamp_products.json';
+import { PRODUCT_IMAGES } from '../[category]';
 
 // Define a type for the product data
 interface Product {
@@ -26,7 +27,7 @@ export const options = {
 import React, { useState } from 'react';
 import { ThemedView } from '../../../../components/ThemedView';
 import { ThemedText } from '../../../../components/ThemedText';
-import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useTheme } from '@react-navigation/native';
@@ -85,7 +86,9 @@ export default function ProductDetail() {
   // Find the product in the JSON data
   const productData = (productsData as Product[]).find(
     (p: Product) => slugify(p.product.name) === product
-  )?.product;
+  );
+
+  const productSku = productData?.sku;
 
   console.log({ category, product, productData });
 
@@ -100,33 +103,44 @@ export default function ProductDetail() {
     );
   }
 
+  if (!productSku) {
+    console.error('Product SKU is undefined for product:', productData?.product.name);
+    return null;
+  }
+
   const handleAddToCart = () => {
     addToCart({
       category: category ?? '',
-      name: productData.name,
-      price: productData.price,
+      name: productData.product.name,
+      price: productData.product.price,
+      sku: productSku,
     });
     // Analytics tracking for add to cart
     MobileCore.trackAction('addToCart', {
-      'product.name': productData.name,
+      'product.name': productData.product.name,
       'product.category': category,
-      'product.price': productData.price,
+      'product.price': productData.product.price,
       'cart.action': 'add',
     });
   };
 
-  const added = isInCart(productData.name, category ?? '');
+  const added = isInCart(productData.product.name, category ?? '');
 
   return (
     <ThemedView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
       </TouchableOpacity>
-      <Ionicons name={PRODUCT_ICONS[productData.name] || 'cube'} size={48} color={colors.primary} style={{ marginBottom: -100, zIndex: 2 }} />
-      <View style={styles.image} />
-      <ThemedText style={styles.title}>{productData.name}</ThemedText>
-      <ThemedText style={styles.description}>{productData.description}</ThemedText>
-      <ThemedText style={styles.price}>${productData.price.toFixed(2)}</ThemedText>
+      <View style={styles.image}>
+        <Image
+          source={PRODUCT_IMAGES[productSku]}
+          style={{ width: 160, height: 160, position: 'absolute', left: 0, top: 0, zIndex: 2, borderRadius: 15 }}
+          onError={(error) => console.error('Error loading image for product:', productData?.product.name, error)}
+        />
+      </View>
+      <ThemedText style={styles.title}>{productData.product.name}</ThemedText>
+      <ThemedText style={styles.description}>{productData.product.description}</ThemedText>
+      <ThemedText style={styles.price}>${productData.product.price.toFixed(2)}</ThemedText>
       <TouchableOpacity
         style={[
           styles.addToCartButton,

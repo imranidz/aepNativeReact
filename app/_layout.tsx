@@ -46,7 +46,7 @@ export default function RootLayout() {
             headerStyle: { backgroundColor: isDark ? '#181c20' : colors.background },
             headerRight: () => (
               <Image
-                source={require('../assets/images/productImages/weretail-logo.svg')}
+                source={require('../assets/images/productImages/weretail-logo.png')}
                 style={{ width: 100, height: 32, resizeMode: 'contain', marginRight: 16 }}
               />
             ),

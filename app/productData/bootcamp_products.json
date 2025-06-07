@@ -8,7 +8,7 @@
         "secondary": "Shirt"
       },
       "price": 39.0,
-      "image": "meotsuamt.svg",
+      "image": "meotsuamt.png",
       "description": "Amsterdam Short Sleeve Travel Shirt is a Shirt priced at $39.0."
     }
   },
@@ -21,7 +21,7 @@
         "secondary": "Pants"
       },
       "price": 98.0,
-      "image": "meotsuann.svg",
+      "image": "meotsuann.png",
       "description": "Analog Dark Wash Jean is a Pants priced at $98.0."
     }
   },
@@ -34,7 +34,7 @@
         "secondary": "Watersports"
       },
       "price": 200.0,
-      "image": "eqswsuaqr.svg",
+      "image": "eqswsuaqr.png",
       "description": "Aqua Force Gps Fitness Monitor is a Watersports priced at $200.0."
     }
   },
@@ -47,7 +47,7 @@
         "secondary": "Shorts"
       },
       "price": 38.0,
-      "image": "woswsubas.svg",
+      "image": "woswsubas.png",
       "description": "Bahamas Shorts is a Shorts priced at $38.0."
     }
   },
@@ -60,7 +60,7 @@
         "secondary": "Running"
       },
       "price": 199.99,
-      "image": "30941863.svg",
+      "image": "30941863.png",
       "description": "Basa MP3 Player is a Running priced at $199.99."
     }
   },
@@ -73,7 +73,7 @@
         "secondary": "Surfing"
       },
       "price": 1100.0,
-      "image": "eqsusubed.svg",
+      "image": "eqsusubed.png",
       "description": "Bear 8x8 Longboard is a Surfing priced at $1100.0."
     }
   },
@@ -86,7 +86,7 @@
         "secondary": "Biking"
       },
       "price": 15.0,
-      "image": "eqbisublp.svg",
+      "image": "eqbisublp.png",
       "description": "Blast Mini Pump is a Biking priced at $15.0."
     }
   },
@@ -99,7 +99,7 @@
         "secondary": "Running"
       },
       "price": 18.0,
-      "image": "eqrusubpe.svg",
+      "image": "eqrusubpe.png",
       "description": "BPA Free Water Bottle is a Running priced at $18.0."
     }
   },
@@ -112,7 +112,7 @@
         "secondary": "Coats"
       },
       "price": 89.0,
-      "image": "meotwibrt.svg",
+      "image": "meotwibrt.png",
       "description": "Brooklyn Coat is a Coats priced at $89.0."
     }
   },
@@ -125,7 +125,7 @@
         "secondary": "Shorts"
       },
       "price": 32.0,
-      "image": "mehisubus.svg",
+      "image": "mehisubus.png",
       "description": "Buffalo Plaid Shorts is a Shorts priced at $32.0."
     }
   },
@@ -138,7 +138,7 @@
         "secondary": "Watersports"
       },
       "price": 18.0,
-      "image": "eqswsucal.svg",
+      "image": "eqswsucal.png",
       "description": "Cabana Stripe Towel is a Watersports priced at $18.0."
     }
   },
@@ -151,7 +151,7 @@
         "secondary": "Shorts"
       },
       "price": 48.0,
-      "image": "wohisucat.svg",
+      "image": "wohisucat.png",
       "description": "Candide Trail Short is a Shorts priced at $48.0."
     }
   },
@@ -164,7 +164,7 @@
         "secondary": "Surfing"
       },
       "price": 785.0,
-      "image": "eqsusuchd.svg",
+      "image": "eqsusuchd.png",
       "description": "Chasing Tail Surfboard is a Surfing priced at $785.0."
     }
   },
@@ -177,7 +177,7 @@
         "secondary": "Gloves"
       },
       "price": 38.0,
-      "image": "meotwicls.svg",
+      "image": "meotwicls.png",
       "description": "Classic Leather Gloves is a Gloves priced at $38.0."
     }
   },
@@ -190,7 +190,7 @@
         "secondary": "Biking"
       },
       "price": 30.0,
-      "image": "eqbisucos.svg",
+      "image": "eqbisucos.png",
       "description": "Comfort Gel Gloves is a Biking priced at $30.0."
     }
   },
@@ -203,7 +203,7 @@
         "secondary": "Biking"
       },
       "price": 15.0,
-      "image": "eqbisucol.svg",
+      "image": "eqbisucol.png",
       "description": "Compact Chain Tool is a Biking priced at $15.0."
     }
   },
@@ -216,7 +216,7 @@
         "secondary": "Shorts"
       },
       "price": 39.0,
-      "image": "mehisucos.svg",
+      "image": "mehisucos.png",
       "description": "Corona Shorts is a Shorts priced at $39.0."
     }
   },
@@ -229,7 +229,7 @@
         "secondary": "Hiking"
       },
       "price": 210.0,
-      "image": "eqsmcz.svg",
+      "image": "eqsmcz.png",
       "description": "Cuzco Backpack is a Hiking priced at $210.0."
     }
   },
@@ -242,7 +242,7 @@
         "secondary": "Shorts"
       },
       "price": 35.0,
-      "image": "wohisudes.svg",
+      "image": "wohisudes.png",
       "description": "Desert Sky Shorts is a Shorts priced at $35.0."
     }
   },
@@ -255,7 +255,7 @@
         "secondary": "Shirt"
       },
       "price": 45.0,
-      "image": "wootsudet.svg",
+      "image": "wootsudet.png",
       "description": "Devi Sleeveless Shirt is a Shirt priced at $45.0."
     }
   },
@@ -268,7 +268,7 @@
         "secondary": "Coats"
       },
       "price": 105.0,
-      "image": "meotwidot.svg",
+      "image": "meotwidot.png",
       "description": "Double Breasted Raincoat is a Coats priced at $105.0."
     }
   },
@@ -281,7 +281,7 @@
         "secondary": "Coats"
       },
       "price": 119.0,
-      "image": "meskwielt.svg",
+      "image": "meskwielt.png",
       "description": "El Gordo Down Jacket is a Coats priced at $119.0."
     }
   },
@@ -294,7 +294,7 @@
         "secondary": "Surfing"
       },
       "price": 750.0,
-      "image": "eqsusuely.svg",
+      "image": "eqsusuely.png",
       "description": "El Greco 8' Shorty is a Surfing priced at $750.0."
     }
   },
@@ -307,7 +307,7 @@
         "secondary": "Shirt"
       },
       "price": 24.0,
-      "image": "meotsuett.svg",
+      "image": "meotsuett.png",
       "description": "Eton Short Sleeve Shirt is a Shirt priced at $24.0."
     }
   },
@@ -320,7 +320,7 @@
         "secondary": "Surfing"
       },
       "price": 800.0,
-      "image": "eqsusuevd.svg",
+      "image": "eqsusuevd.png",
       "description": "Even Keel Paddleboard is a Surfing priced at $800.0."
     }
   },
@@ -333,7 +333,7 @@
         "secondary": "Shirt"
       },
       "price": 54.0,
-      "image": "mehiwiext.svg",
+      "image": "mehiwiext.png",
       "description": "Expedition Tech Long Sleeved Shirt is a Shirt priced at $54.0."
     }
   },
@@ -346,7 +346,7 @@
         "secondary": "Pants"
       },
       "price": 39.99,
-      "image": "116138647.svg",
+      "image": "116138647.png",
       "description": "Faba Running Pants is a Pants priced at $39.99."
     }
   },
@@ -359,7 +359,7 @@
         "secondary": "Running"
       },
       "price": 65.0,
-      "image": "eqrusufle.svg",
+      "image": "eqrusufle.png",
       "description": "Fleet Cross Training Shoe is a Running priced at $65.0."
     }
   },
@@ -372,7 +372,7 @@
         "secondary": "Shorts"
       },
       "price": 35.0,
-      "image": "wohisufls.svg",
+      "image": "wohisufls.png",
       "description": "Fleet Fox Running Shorts is a Shorts priced at $35.0."
     }
   },
@@ -385,7 +385,7 @@
         "secondary": "Snow-Sports"
       },
       "price": 599.0,
-      "image": "eqwrsnbd.svg",
+      "image": "eqwrsnbd.png",
       "description": "Flying Snowboard is a Snow-Sports priced at $599.0."
     }
   },
@@ -398,7 +398,7 @@
         "secondary": "Running"
       },
       "price": 150.0,
-      "image": "eqrusugor.svg",
+      "image": "eqrusugor.png",
       "description": "Gomobile Fitness Monitorsmart Music Player is a Running priced at $150.0."
     }
   },
@@ -411,7 +411,7 @@
         "secondary": "Pants"
       },
       "price": 86.99,
-      "image": "331050524.svg",
+      "image": "331050524.png",
       "description": "Hiking Pants is a Pants priced at $86.99."
     }
   },
@@ -424,7 +424,7 @@
         "secondary": "Hiking"
       },
       "price": 79.99,
-      "image": "170227049.svg",
+      "image": "170227049.png",
       "description": "Hiking Poles is a Hiking priced at $79.99."
     }
   },
@@ -437,7 +437,7 @@
         "secondary": "Shirt"
       },
       "price": 42.0,
-      "image": "mehisulat.svg",
+      "image": "mehisulat.png",
       "description": "Laguna Short Sleeve Shirt is a Shirt priced at $42.0."
     }
   },
@@ -450,7 +450,7 @@
         "secondary": "Watersports"
       },
       "price": 50.0,
-      "image": "eqswsumak.svg",
+      "image": "eqswsumak.png",
       "description": "Manta Ray Snorkel And Dive Mask is a Watersports priced at $50.0."
     }
   },
@@ -463,7 +463,7 @@
         "secondary": "Footwear"
       },
       "price": 110.0,
-      "image": "eqbisumas.svg",
+      "image": "eqbisumas.png",
       "description": "Marin Mountain Bike Shoes is a Footwear priced at $110.0."
     }
   },
@@ -476,7 +476,7 @@
         "secondary": "Gloves"
       },
       "price": 30.0,
-      "image": "meskwimis.svg",
+      "image": "meskwimis.png",
       "description": "Midweight Fleece Gloves is a Gloves priced at $30.0."
     }
   },
@@ -489,7 +489,7 @@
         "secondary": "Biking"
       },
       "price": 65.0,
-      "image": "eqbisumxs.svg",
+      "image": "eqbisumxs.png",
       "description": "Mx121 Sport Pedals is a Biking priced at $65.0."
     }
   },
@@ -502,7 +502,7 @@
         "secondary": "Shorts"
       },
       "price": 24.0,
-      "image": "mesusupis.svg",
+      "image": "mesusupis.png",
       "description": "Pipeline Board Shorts is a Shorts priced at $24.0."
     }
   },
@@ -515,7 +515,7 @@
         "secondary": "Coats"
       },
       "price": 75.0,
-      "image": "meotwipot.svg",
+      "image": "meotwipot.png",
       "description": "Portland Hooded Jacket is a Coats priced at $75.0."
     }
   },
@@ -528,7 +528,7 @@
         "secondary": "Watersports"
       },
       "price": 25.0,
-      "image": "eqswsuprs.svg",
+      "image": "eqswsuprs.png",
       "description": "Pro Series Swim Goggles is a Watersports priced at $25.0."
     }
   },
@@ -541,7 +541,7 @@
         "secondary": "Watersports"
       },
       "price": 25.0,
-      "image": "eqswsupus.svg",
+      "image": "eqswsupus.png",
       "description": "Pufferfish Snorkeling Fins is a Watersports priced at $25.0."
     }
   },
@@ -554,7 +554,7 @@
         "secondary": "Gloves"
       },
       "price": 24.99,
-      "image": "90019930.svg",
+      "image": "90019930.png",
       "description": "Purple Gloves is a Gloves priced at $24.99."
     }
   },
@@ -567,7 +567,7 @@
         "secondary": "Shirt"
       },
       "price": 39.0,
-      "image": "wohisurit.svg",
+      "image": "wohisurit.png",
       "description": "Rios T Shirt is a Shirt priced at $39.0."
     }
   },
@@ -580,7 +580,7 @@
         "secondary": "Surfing"
       },
       "price": 895.0,
-      "image": "eqsusurud.svg",
+      "image": "eqsusurud.png",
       "description": "Rusty Parrot Shortboad is a Surfing priced at $895.0."
     }
   },
@@ -593,7 +593,7 @@
         "secondary": "Watersports"
       },
       "price": 28.0,
-      "image": "eqswsuses.svg",
+      "image": "eqswsuses.png",
       "description": "Seastar Flip Flops is a Watersports priced at $28.0."
     }
   },
@@ -606,7 +606,7 @@
         "secondary": "Biking"
       },
       "price": 75.0,
-      "image": "eqbisuset.svg",
+      "image": "eqbisuset.png",
       "description": "Sequoia Bike Helmet is a Biking priced at $75.0."
     }
   },
@@ -619,7 +619,7 @@
         "secondary": "Snow-Sports"
       },
       "price": 75.0,
-      "image": "woskwislt.svg",
+      "image": "woskwislt.png",
       "description": "Sleek Insulated Coat is a Snow-Sports priced at $75.0."
     }
   },
@@ -632,7 +632,7 @@
         "secondary": "Coats"
       },
       "price": 139.0,
-      "image": "meotwislt.svg",
+      "image": "meotwislt.png",
       "description": "Slopeside Coat is a Coats priced at $139.0."
     }
   },
@@ -645,7 +645,7 @@
         "secondary": "Shorts"
       },
       "price": 39.0,
-      "image": "mehisusls.svg",
+      "image": "mehisusls.png",
       "description": "Slot Canyon Active Shorts is a Shorts priced at $39.0."
     }
   },
@@ -658,7 +658,7 @@
         "secondary": "Shirt"
       },
       "price": 69.0,
-      "image": "woswsusoc.svg",
+      "image": "woswsusoc.png",
       "description": "Soleil Tunic is a Shirt priced at $69.0."
     }
   },
@@ -671,7 +671,7 @@
         "secondary": "Coats"
       },
       "price": 189.0,
-      "image": "wootwisot.svg",
+      "image": "wootwisot.png",
       "description": "Sonja Insulated Jacket is a Coats priced at $189.0."
     }
   },
@@ -684,7 +684,7 @@
         "secondary": "Running"
       },
       "price": 119.99,
-      "image": "84391210.svg",
+      "image": "84391210.png",
       "description": "Spixa Runners is a Running priced at $119.99."
     }
   },
@@ -697,7 +697,7 @@
         "secondary": "Shorts"
       },
       "price": 44.0,
-      "image": "mehisusts.svg",
+      "image": "mehisusts.png",
       "description": "Stretch Fatigue Shorts is a Shorts priced at $44.0."
     }
   },
@@ -710,7 +710,7 @@
         "secondary": "Footwear"
       },
       "price": 65.0,
-      "image": "meotwisus.svg",
+      "image": "meotwisus.png",
       "description": "Sussex Rain Boots is a Footwear priced at $65.0."
     }
   },
@@ -723,7 +723,7 @@
         "secondary": "Surfing"
       },
       "price": 695.0,
-      "image": "eqsusutho.svg",
+      "image": "eqsusutho.png",
       "description": "The Neutrino is a Surfing priced at $695.0."
     }
   },
@@ -736,7 +736,7 @@
         "secondary": "Surfing"
       },
       "price": 900.0,
-      "image": "eqsusuthd.svg",
+      "image": "eqsusuthd.png",
       "description": "The Stretch Longboard is a Surfing priced at $900.0."
     }
   },
@@ -749,7 +749,7 @@
         "secondary": "Pants"
       },
       "price": 69.0,
-      "image": "mehisutrs.svg",
+      "image": "mehisutrs.png",
       "description": "Trail Model Pants is a Pants priced at $69.0."
     }
   },
@@ -762,7 +762,7 @@
         "secondary": "Pants"
       },
       "price": 65.0,
-      "image": "meotsutrs.svg",
+      "image": "meotsutrs.png",
       "description": "Tribeca Cargo Pants is a Pants priced at $65.0."
     }
   },
@@ -775,7 +775,7 @@
         "secondary": "Scarf"
       },
       "price": 45.0,
-      "image": "meotwizuf.svg",
+      "image": "meotwizuf.png",
       "description": "Zurich Wool Scarf is a Scarf priced at $45.0."
     }
   }

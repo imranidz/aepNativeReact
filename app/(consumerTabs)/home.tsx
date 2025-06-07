@@ -9,7 +9,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import productsData from '../productData/bootcamp_products.json';
 
 // Extract unique categories from the JSON data
-const CATEGORIES = Array.from(new Set(productsData.map(product => product.product.categories.primary))).map(category => ({
+const CATEGORIES: { key: string; label: string; description: string }[] = Array.from(new Set(productsData.map(product => product.product.categories.primary))).map(category => ({
   key: category.toLowerCase(),
   label: category.charAt(0).toUpperCase() + category.slice(1),
   description: `${category} related products.`
@@ -62,7 +62,7 @@ export default function HomeTab() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <ThemedText style={styles.header}>Explore Camping & Hiking</ThemedText>
+      <ThemedText style={styles.header}>WeRetail</ThemedText>
       <FlatList
         data={CATEGORIES}
         renderItem={renderCategory}
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 12,
     marginRight: 16,
+    overflow: 'hidden', // Ensure the image is clipped to the border radius
   },
   cardTitle: {
     fontSize: 18,
