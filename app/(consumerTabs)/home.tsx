@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useFocusEffect, useTheme, useNavigationState } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
@@ -14,6 +14,12 @@ const CATEGORIES: { key: string; label: string; description: string }[] = Array.
   label: category.charAt(0).toUpperCase() + category.slice(1),
   description: `${category} related products.`
 }));
+
+const CATEGORY_IMAGES: { [key: string]: any } = {
+  men: require('../../assets/images/productImages/mtnman.jpeg'),
+  women: require('../../assets/images/productImages/mtnwomen.jpeg'),
+  equipment: require('../../assets/images/productImages/mtnequipment.jpeg'),
+};
 
 const CATEGORY_ICONS: { [key: string]: string } = {
   family: 'people',
@@ -51,7 +57,11 @@ export default function HomeTab() {
 
   const renderCategory = ({ item }: { item: any }) => (
     <TouchableOpacity style={[styles.card, { backgroundColor: colors.card }]} onPress={() => handleCategoryPress(item.key)}>
-      <Ionicons name={CATEGORY_ICONS[item.key] as any || 'cube'} size={32} color={colors.primary} style={{ position: 'absolute', left: 32, top: 36, zIndex: 2 }} />
+      <Image
+        source={CATEGORY_IMAGES[item.key]}
+        style={{ width: 64, height: 64, position: 'absolute', left: 16, top: 16, zIndex: 2, borderRadius: 12 }}
+        onError={(error) => console.error('Error loading image for category:', item.key, error)}
+      />
       <View style={[styles.cardImage, { backgroundColor: '#e3eaf3' }]} />
       <View style={{ flex: 1 }}>
         <ThemedText style={styles.cardTitle}>{item.label}</ThemedText>
