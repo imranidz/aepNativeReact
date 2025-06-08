@@ -30,7 +30,7 @@ import { ThemedText } from '../../../../components/ThemedText';
 import { View, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useNavigation } from '@react-navigation/native';
 import { useCart } from '../../../../components/CartContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -82,6 +82,7 @@ export default function ProductDetail() {
   const router = useRouter();
   const { colors } = useTheme();
   const { addToCart, isInCart } = useCart();
+  const navigation = useNavigation();
 
   // Find the product in the JSON data
   const productData = (productsData as Product[]).find(
@@ -90,21 +91,21 @@ export default function ProductDetail() {
 
   const productSku = productData?.sku;
 
-  console.log({ category, product, productData });
+  //console.log({ category, product, productData });
 
   if (!productData) {
     return (
       <ThemedView style={styles.container}>
         <ThemedText>Product not found.</ThemedText>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
+        <TouchableOpacity onPress={() => router.back()} style={{ padding: 10 }}>
+          <ThemedText style={{ color: colors.primary }}>Back</ThemedText>
         </TouchableOpacity>
       </ThemedView>
     );
   }
 
   if (!productSku) {
-    console.error('Product SKU is undefined for product:', productData?.product.name);
+    //console.error('Product SKU is undefined for product:', productData?.product.name);
     return null;
   }
 
@@ -127,9 +128,9 @@ export default function ProductDetail() {
   const added = isInCart(productData.product.name, category ?? '');
 
   return (
-    <ThemedView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <ThemedText style={styles.backButtonText}>{'< Back'}</ThemedText>
+    <ThemedView style={{ flex: 1, paddingTop: 48, paddingHorizontal: 24 }}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 10, alignSelf: 'flex-start', marginBottom: 16 }}>
+        <ThemedText style={{ color: colors.primary }}>Back</ThemedText>
       </TouchableOpacity>
       <View style={styles.image}>
         <Image
@@ -161,15 +162,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 48,
     paddingHorizontal: 24,
-  },
-  backButton: {
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  backButtonText: {
-    color: '#007AFF',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   image: {
     width: 160,

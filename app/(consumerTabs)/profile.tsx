@@ -1,14 +1,17 @@
+import Clipboard from '@react-native-clipboard/clipboard';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 import React, { useCallback, useState } from 'react';
 import { View, Button, TextInput } from 'react-native';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { useTheme } from '@react-navigation/native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { Identity, AuthenticatedState, IdentityMap, IdentityItem } from '@adobe/react-native-aepedgeidentity';
-import Clipboard from '@react-native-clipboard/clipboard';
 import { UserProfile } from '@adobe/react-native-aepuserprofile';
+//import { useProfile } from '../../components/ProfileContext';
+import { useProfileStorage } from '../../hooks/useProfileStorage'; // Adjust the path as necessary
 
 export default function ProfileTab() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -22,6 +25,8 @@ export default function ProfileTab() {
   const { colors } = useTheme();
   const [ecid, setEcid] = useState('');
   const [identityMap, setIdentityMap] = useState({});
+  const { profile, setProfile } = useProfileStorage();
+  //console.log('Profile Context:', { profile });
 
   useFocusEffect(
     useCallback(() => {
@@ -29,7 +34,7 @@ export default function ProfileTab() {
         'web.webPageDetails.name': 'Profile',
         'application.name': 'WeRetailMobileApp',
       });
-      console.log('ProfileTab viewed - trigger Adobe tracking here');
+      //console.log('ProfileTab viewed - trigger Adobe tracking here');
 
       // Fetch ECID
       Identity.getExperienceCloudId().then(setEcid);
@@ -55,7 +60,7 @@ export default function ProfileTab() {
       firstName: inputFirstName,
       email: inputEmail,
     });
-    console.log('User logged in - trigger Adobe login tracking here');
+    //console.log('User logged in - trigger Adobe login tracking here');
 
     // Update user profile in AEP
     UserProfile.updateUserAttributes({
@@ -74,6 +79,11 @@ export default function ProfileTab() {
     // Update identities in AEP
     Identity.updateIdentities(identityMap);
     console.log('Email and ECID set as authenticated identities in AEP');
+
+    // After successful login
+    // console.log('Setting profile with:', { firstName: inputFirstName, email: inputEmail });
+    setProfile({ firstName: inputFirstName, email: inputEmail });
+    console.log('Setting profile with:', { firstName: inputFirstName, email: inputEmail });
   };
 
   const handleLogout = () => {
@@ -87,12 +97,12 @@ export default function ProfileTab() {
     MobileCore.trackAction('logout', {
       application: 'AEPSampleApp',
     });
-    console.log('User logged out - trigger Adobe logout tracking here');
+    console.log('User logged out');
   };
 
   const copyToClipboard = (text: string) => {
     Clipboard.setString(text);
-    console.log('Text copied to clipboard:', text);
+    //console.log('Text copied to clipboard:', text);
   };
 
   return (

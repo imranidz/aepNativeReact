@@ -1,5 +1,6 @@
 import productsData from '../../productData/bootcamp_products.json';
 import { Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const PRODUCT_ICONS: { [key: string]: any } = {
   // Family
@@ -124,6 +125,7 @@ export default function CategoryProductList() {
   const { category } = useLocalSearchParams<{ category: string }>();
   const router = useRouter();
   const { colors } = useTheme();
+  const navigation = useNavigation();
 
   // Filter products by category
   const products = productsData.filter(product => product.product.categories.primary.toLowerCase() === category?.toLowerCase());
@@ -152,7 +154,10 @@ export default function CategoryProductList() {
 
   return (
     <ThemedView style={{ flex: 1 }}>
-      <ThemedText style={styles.header}>{category ? category.charAt(0).toUpperCase() + category.slice(1) : ''} Products</ThemedText>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 10 }}>
+        <ThemedText style={{ color: colors.primary }}>Back</ThemedText>
+      </TouchableOpacity>
+      <ThemedText style={styles.header}>{category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Products` : 'Products'}</ThemedText>
       <FlatList
         data={products}
         renderItem={renderProduct}

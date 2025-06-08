@@ -1,7 +1,20 @@
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+// Define your navigation types
+type RootStackParamList = {
+  home: undefined;
+  offers: undefined;
+  cart: undefined;
+  profile: undefined;
+  Checkout: undefined; // Ensure this matches your route name
+};
 
 export default function ConsumerTabsLayout() {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   return (
     <Tabs>
       <Tabs.Screen
@@ -62,6 +75,14 @@ export default function ConsumerTabsLayout() {
           tabBarButton: () => null,
         }}
       />
+
+<Tabs.Screen
+        name="Checkout"
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+
 
 
     </Tabs>
