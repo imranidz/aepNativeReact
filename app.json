@@ -4,11 +4,11 @@
     "slug": "WeRetail",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/productImages/weretail-logo.svg",
+    "icon": "./assets/images/productImages/weretail-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/productImages/weretail-logo.svg",
+      "image": "./assets/images/productImages/weretail-logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/productImages/weretail-logo.svg",
+        "foregroundImage": "./assets/images/productImages/weretail-logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.WeRetail"
@@ -26,7 +26,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/productImages/weretail-logo.png"
     },
     "plugins": [
       "expo-router",
@@ -41,9 +41,17 @@
           }
         }
       ]
-     ],
+    ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a5b92550-3e0d-4481-8f93-afdd27f8901c"
+      }
     }
   }
 }
