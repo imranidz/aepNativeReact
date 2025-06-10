@@ -1,35 +1,31 @@
-/*
-Copyright 2022 Adobe. All rights reserved.
-This file is licensed to you under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License. You may obtain a copy
-of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under
-the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
-OF ANY KIND, either express or implied. See the License for the specific language
-governing permissions and limitations under the License.
-*/
-
+import { useTheme } from '@react-navigation/native';
+import { Identity, IdentityMap, IdentityItem, AuthenticatedState } from '@adobe/react-native-aepedgeidentity';
 import React, {useState, useEffect, useRef} from 'react';
+import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
+import {  useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import {WebView} from 'react-native-webview';
+import styles from '../../styles/styles';
 import {
   Optimize,
   DecisionScope,
   Proposition,
 } from '@adobe/react-native-aepoptimize';
-import {WebView} from 'react-native-webview';
-import styles from '../../styles/styles';
 import {
   Button,
   View,
   Image,
   TouchableOpacity,
   Dimensions,
+  TextInput,
+  Modal,
+  Text,
+  Alert,
 } from 'react-native';
-import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
-import {  useRouter } from 'expo-router';
-import { ThemedView } from '../../components/ThemedView';
-import { ThemedText } from '../../components/ThemedText';
-import { useTheme } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const ViewTypes = {
   header: 0,
@@ -40,7 +36,7 @@ const TARGET_OFFER_TYPE_JSON = 'application/json';
 const TARGET_OFFER_TYPE_HTML = 'text/html';
 
 const defaultPropositions = {
-  textProposition: 'Placeholder Text Offer!!',
+  textProposition: '',
   imageProposition:
     'https://blog.adobe.com/en/publish/2020/05/28/media_3dfaf748ad02bf771410a771def79c9ad86b1766.jpg',
   htmlProposition:
@@ -55,48 +51,139 @@ export default () => {
   const [htmlProposition, setHtmlProposition] = useState<Proposition>();
   const [jsonProposition, setJsonProposition] = useState<Proposition>();
   const [targetProposition, setTargetProposition] = useState<Proposition | undefined>();
-
-  const decisionScopeText = new DecisionScope(
-    'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkNWQzOGYwNDg5NyJ9',
-  );
-  const decisionScopeImage = new DecisionScope(
-    'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkYTliNDMwNDg5OCJ9',
-  );
-  const decisionScopeHtml = new DecisionScope(
-    'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkOTJjNmJhZDA4NCJ9',
-  );
-  const decisionScopeJson = new DecisionScope(
-    'eyJ4ZG06YWN0aXZpdHlJZCI6Inhjb3JlOm9mZmVyLWFjdGl2aXR5OjE0MWM4NTg2MmRiMDQ4YzkiLCJ4ZG06cGxhY2VtZW50SWQiOiJ4Y29yZTpvZmZlci1wbGFjZW1lbnQ6MTQxYzZkN2VjOTZmOTg2ZCJ9',
-  );
-  const decisionScopeTargetMbox = new DecisionScope('demoLoc3');
-
-  const decisionScopes = [
-    decisionScopeText,
-    decisionScopeImage,
-    decisionScopeHtml,
-    decisionScopeJson,
-    decisionScopeTargetMbox,
-  ];
+  const [userDecisionScope, setUserDecisionScope] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const isMounted = useRef(true);
   useEffect(() => {
+    console.log('Component mounted, initializing...');
     isMounted.current = true;
+
+    // Check if SDK is initialized
+    console.log('Checking if SDK is initialized...');
+    const isSDKInitialized = true; // Replace with actual check
+    if (!isSDKInitialized) {
+      console.error('SDK is not initialized');
+      return;
+    }
+    console.log('SDK is initialized');
+
+    // Check network connectivity
+    console.log('Checking network connectivity...');
+    const isNetworkConnected = true; // Replace with actual check
+    if (!isNetworkConnected) {
+      console.error('No network connectivity');
+      return;
+    }
+    console.log('Network is connected');
+
+    // Check configuration
+    console.log('Checking SDK configuration...');
+    const isConfigValid = true; // Replace with actual check
+    if (!isConfigValid) {
+      console.error('SDK configuration is invalid');
+      return;
+    }
+    console.log('SDK configuration is valid');
+
     Optimize.extensionVersion().then(version => {
-      if (isMounted.current) setVersion(version);
+      if (isMounted.current) {
+        console.log('Optimize extension version:', version);
+        setVersion(version);
+      }
     });
+
+    // Ensure SDK is fully initialized before proceeding
+    const ensureSDKInitialized = async () => {
+      console.log('Ensuring SDK is fully initialized...');
+      try {
+        // Placeholder for actual SDK readiness check
+        const sdkReady = true; // Replace with actual check
+        if (!sdkReady) {
+          console.error('SDK is not fully ready');
+          return;
+        }
+        console.log('SDK is fully initialized');
+
+        // Set identifiers
+        const syncIdentifiers = async () => {
+          try {
+            // Retrieve the identity map using getIdentities
+            const identityData = await Identity.getIdentities();
+            console.log('Identity Data:', identityData);
+
+            // Extract ECID and email from the identity map
+            const ecidArray = identityData.identityMap.ECID;
+            const emailArray = identityData.identityMap.Email;
+
+            if (!ecidArray || ecidArray.length === 0) {
+              console.error('ECID not found in identity map');
+              return;
+            }
+            if (!emailArray || emailArray.length === 0) {
+              console.error('Email not found in identity map');
+              return;
+            }
+
+            const ecid = ecidArray[0].id; // Assuming the first entry is the one you need
+            const email = emailArray[0].id; // Assuming the first entry is the one you need
+
+            const identityMap = new IdentityMap();
+            identityMap.addItem(new IdentityItem(ecid, AuthenticatedState.AMBIGUOUS, false), 'ECID');
+            identityMap.addItem(new IdentityItem(email, AuthenticatedState.AUTHENTICATED, true), 'Email');
+
+            Identity.updateIdentities(identityMap);
+            console.log('Identifiers updated:', identityMap);
+
+            // Function to log detailed information about the identity map
+            const logIdentityMapDetails = (identityMap: { identityMap: { [key: string]: IdentityItem[] } }) => {
+              console.log('Logging detailed identity map:');
+              for (const [key, items] of Object.entries(identityMap.identityMap)) {
+                console.log(`Identifier Type: ${key}`);
+                console.log(`Items: ${JSON.stringify(items)}`); // Log the raw items array
+                (items as IdentityItem[]).forEach((item: IdentityItem) => {
+                  console.log(`  ID: ${item.id}, Authenticated State: ${item.authenticatedState}, Primary: ${item.primary}`);
+                });
+              }
+            };
+
+            // Use this function where you log the identity map
+            logIdentityMapDetails(identityData);
+          } catch (error) {
+            console.error('Error updating identifiers:', error);
+          }
+        };
+
+        await syncIdentifiers();
+
+        // Load ECID on component mount
+        console.log('Attempting to load ECID...');
+        const identityMap = await Identity.getIdentities();
+        console.log('Identity Map on Mount:', identityMap);
+
+        // Fetch identities to populate identity map
+        console.log('Fetching identities...');
+        const currentIdentity = await Identity.getIdentities();
+        console.log('Identity.getIdentities:', JSON.stringify(currentIdentity));
+      } catch (error) {
+        console.error('Error during SDK initialization check:', error);
+      }
+    };
+
+    ensureSDKInitialized();
+
     // Subscribe to proposition updates
     Optimize.onPropositionUpdate({
       call(propositions) {
+        console.log('Proposition update received:', propositions);
         if (isMounted.current && propositions) {
-          setTextProposition(propositions.get(decisionScopeText.getName()));
-          setImageProposition(propositions.get(decisionScopeImage.getName()));
-          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-          setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+          setJsonProposition(propositions.get(userDecisionScope));
         }
       },
     });
+
     return () => {
+      console.log('Component unmounted, cleaning up...');
       isMounted.current = false;
     };
   }, []);
@@ -108,20 +195,56 @@ export default () => {
   };
 
   const updatePropositions = () => {
-    Optimize.updatePropositions(decisionScopes);
+    Optimize.updatePropositions([new DecisionScope(userDecisionScope)]);
     console.log('Updated Propositions');
   };
 
   const getPropositions = async () => {
-    const propositions: Map<string, Proposition> =
-      await Optimize.getPropositions(decisionScopes);
-    console.log(propositions);
-    if (propositions) {
-      setTextProposition(propositions.get(decisionScopeText.getName()));
-      setImageProposition(propositions.get(decisionScopeImage.getName()));
-      setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-      setJsonProposition(propositions.get(decisionScopeJson.getName()));
-      setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+    console.log('Get Propositions called');
+    if (!userDecisionScope) {
+      console.error('Error: No decision scope entered');
+      Alert.alert('Error', 'Please enter a decision scope before proceeding.');
+      return;
+    }
+    const userScope = new DecisionScope(userDecisionScope);
+    console.log('Using decision scope:', userScope.getName());
+
+    // Log the ECID or full identity map
+    console.log('Fetching identity map...');
+    try {
+      const identityMap = await Identity.getIdentities();
+      console.log('Identity Map:', identityMap);
+    } catch (error) {
+      console.error('Error fetching identity map:', error);
+    }
+
+    let ecid;
+    // Use getExperienceCloudId to retrieve the ECID
+    console.log('Fetching ECID...');
+    try {
+      ecid = await Identity.getExperienceCloudId();
+      if (!ecid) {
+        console.error('ECID not found');
+        return;
+      }
+      console.log('ECID found:', ecid);
+    } catch (error) {
+      console.error('Error fetching ECID:', error);
+    }
+
+    const xdmData = { "xdm": { "identityMap": { "ECID": { "id": ecid, "primary": true } } } };
+
+    // Adjust the getPropositions call
+    console.log('Fetching propositions...');
+    try {
+      const propositions: Map<string, Proposition> =
+        await Optimize.getPropositions([userScope]);
+      console.log('Propositions received:', propositions);
+      if (propositions) {
+        setJsonProposition(propositions.get(userScope.getName()));
+      }
+    } catch (error) {
+      console.error('Error fetching propositions:', error);
     }
   };
 
@@ -134,11 +257,7 @@ export default () => {
     Optimize.onPropositionUpdate({
       call(propositions: Map<String, Proposition>) {
         if (propositions) {
-          setTextProposition(propositions.get(decisionScopeText.getName()));
-          setImageProposition(propositions.get(decisionScopeImage.getName()));
-          setHtmlProposition(propositions.get(decisionScopeHtml.getName()));
-          setJsonProposition(propositions.get(decisionScopeJson.getName()));
-          setTargetProposition(propositions.get(decisionScopeTargetMbox.getName()));
+          setJsonProposition(propositions.get(userDecisionScope));
         }
       },
     });
@@ -344,10 +463,47 @@ export default () => {
   };
   const router = useRouter();
 
+  const handleUserDecisionScopeChange = (text: string) => {
+    setUserDecisionScope(text);
+    const newDecisionScopeJson = new DecisionScope(text);
+    setJsonProposition(undefined); // Clear previous proposition
+    Optimize.updatePropositions([newDecisionScopeJson]);
+  };
+
+  const handleSaveDecisionScope = async () => {
+    const newDecisionScopeJson = new DecisionScope(userDecisionScope);
+    setJsonProposition(undefined); // Clear previous proposition
+    Optimize.updatePropositions([newDecisionScopeJson]);
+    try {
+      await AsyncStorage.setItem('decisionScope', userDecisionScope);
+      console.log('Decision scope saved in AsyncStorage:', userDecisionScope); // Log the decision scope
+    } catch (error) {
+      console.error('Error saving decision scope to AsyncStorage:', error);
+    }
+    setIsModalVisible(true); // Show success modal
+  };
+
   return (
     <ThemedView style={{...styles.container, marginTop: 30}}>
       <Button onPress={() => router.back()}  title="Go to main page" />
       <ThemedText style={styles.welcome}>Optimize</ThemedText>
+      <View style={{margin: 5}}>
+        <TextInput
+          style={{
+            height: 40,
+            borderColor: 'gray',
+            borderWidth: 1,
+            marginBottom: 10,
+            paddingLeft: 5,
+            color: 'white',
+          }}
+          placeholder="Enter encoded decision scope"
+          placeholderTextColor="lightgray"
+          onChangeText={setUserDecisionScope}
+          value={userDecisionScope}
+        />
+        <Button title="Save Decision Scope" onPress={handleSaveDecisionScope} />
+      </View>
       <View style={{margin: 5}}>
         <Button title="Extension Version" onPress={optimizeExtensionVersion} />
       </View>
@@ -369,9 +525,6 @@ export default () => {
           onPress={onPropositionUpdate}
         />
       </View>
-      <ThemedText style={{...styles.welcome, fontSize: 20}}>
-        SDK Version:: {version}
-      </ThemedText>
       <ThemedText style={styles.welcome}>Personalized Offers</ThemedText>
       <RecyclerListView
         style={{width: width}}
@@ -380,6 +533,21 @@ export default () => {
         rowRenderer={rowRenderer}
         onVisibleIndicesChanged={indicesChangeHandler}
       />
+      {/* Success Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{width: 300, padding: 20, backgroundColor: 'white', borderRadius: 10}}>
+            <Text style={{fontSize: 18, marginBottom: 10}}>Success!</Text>
+            <Text>Your decision scope has been saved.</Text>
+            <Button title="Close" onPress={() => setIsModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
     </ThemedView>
   );
 };

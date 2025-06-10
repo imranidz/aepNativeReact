@@ -1,26 +1,299 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
-import { View } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Button, Image, FlatList } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
+import { Optimize, DecisionScope, Proposition } from '@adobe/react-native-aepoptimize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Identity, IdentityMap, AuthenticatedState } from '@adobe/react-native-aepedgeidentity';
+
+const PROFILE_KEY = 'userProfile';
+const DECISION_SCOPE_KEY = 'decisionScope';
+
+export function useProfileStorage() {
+  const [profile, setProfile] = useState({ firstName: '', email: '' });
+  const [decisionScope, setDecisionScope] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const storedProfile = await AsyncStorage.getItem(PROFILE_KEY);
+        if (storedProfile) {
+          setProfile(JSON.parse(storedProfile));
+        }
+        const storedScope = await AsyncStorage.getItem(DECISION_SCOPE_KEY);
+        if (storedScope) {
+          setDecisionScope(storedScope);
+          console.log('Decision scope loaded from AsyncStorage:', storedScope);
+        }
+      } catch (error) {
+        console.error('Failed to load data from storage:', error);
+      } finally {
+        setIsLoading(false);
+        console.log('Loading complete, isLoading set to false');
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+  const saveProfile = async (newProfile: { firstName: string; email: string }) => {
+    try {
+      await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify(newProfile));
+      setProfile(newProfile);
+    } catch (error) {
+      console.error('Failed to save profile to storage:', error);
+    }
+  };
+
+  const saveDecisionScope = async (scope: string) => {
+    try {
+      await AsyncStorage.setItem(DECISION_SCOPE_KEY, scope);
+      setDecisionScope(scope);
+    } catch (error) {
+      console.error('Failed to save decision scope to storage:', error);
+    }
+  };
+
+  return { profile, setProfile, decisionScope, setDecisionScope };
+}
+
+// Define a type for offers
+interface Offer {
+  title: string;
+  text: string;
+  image: string;
+}
+
+const OfferCard = ({ offer, styles, colors }: { offer: Offer, styles: any, colors: any }) => {
+  return (
+    <View style={[styles.card, { alignItems: 'center', backgroundColor: colors.card, padding: 16, width: '100%' }]}>
+      <Image
+        source={{ uri: offer.image }}
+        style={{ width: 64, height: 64, borderRadius: 12, marginBottom: 16, marginRight: 16 }}
+        onError={(error) => console.error('Error loading image for offer:', offer.title, error)}
+      />
+      <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '80%' }}>
+        <ThemedText style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: 4, textAlign: 'left' }}>{offer.title}</ThemedText>
+        <ThemedText style={{ color: colors.text, fontSize: 14, textAlign: 'left' }}>{offer.text}</ThemedText>
+      </View>
+    </View>
+  );
+};
 
 export default function OffersTab() {
-  useFocusEffect(
-    useCallback(() => {
-      MobileCore.trackState('OffersTab', {
-        'web.webPageDetails.name': 'Offers',
-        'application.name': 'WeRetailMobileApp',
-      });
-      console.log('OffersTab viewed - trigger Adobe tracking here');
-    }, [])
-  );
+  const { colors } = useTheme();
+  const { profile, setProfile, decisionScope, setDecisionScope } = useProfileStorage();
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const styles = StyleSheet.create({
+    card: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 12,
+      marginVertical: 8,
+      padding: 16,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 2 },
+      backgroundColor: colors.card,
+    },
+    cardImage: {
+      width: 64,
+      height: 64,
+      borderRadius: 12,
+      position: 'absolute',
+      left: 16,
+      top: 16,
+      zIndex: 2,
+      overflow: 'hidden',
+    },
+    cardTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 4,
+      color: colors.text,
+    },
+    cardDescription: {
+      fontSize: 14,
+      opacity: 0.7,
+    },
+    list: {
+      padding: 16,
+    },
+  });
+
+  useEffect(() => {
+    console.log('OffersTab view loaded'); // Log when the view is loaded
+
+    // Ensure SDK is fully initialized
+    const ensureSDKInitialized = async () => {
+      console.log('Ensuring SDK is fully initialized...');
+      try {
+        const sdkReady = true; // Replace with actual check
+        if (!sdkReady) {
+          console.error('SDK is not fully ready');
+          return;
+        }
+        console.log('SDK is fully initialized');
+      } catch (error) {
+        console.error('Error during SDK initialization check:', error);
+      }
+    };
+
+    ensureSDKInitialized();
+
+    // Subscribe to proposition updates
+    Optimize.onPropositionUpdate({
+      call(propositions) {
+        console.log('Proposition update received:', propositions);
+        if (propositions) {
+          const updatedOffers = propositions.get(decisionScope)?.items.map(item => {
+            const characteristics = item.data.characteristics || {};
+            let parsedContent;
+            try {
+              parsedContent = JSON.parse(item.data.content);
+              console.log('Parsed Content:', parsedContent); // Log parsed content
+            } catch (e) {
+              console.error('Error parsing content:', e);
+              parsedContent = {};
+            }
+            return {
+              title: parsedContent.title || 'No Title',
+              text: parsedContent.text || 'No Text',
+              image: parsedContent.image || '',
+            };
+          }) || [];
+          setOffers(updatedOffers);
+          console.log('Updated offers:', updatedOffers);
+        }
+      },
+    });
+
+    // Load profile and decision scope
+    const loadProfileAndScope = async () => {
+      try {
+        const storedProfile = await AsyncStorage.getItem(PROFILE_KEY);
+        if (storedProfile) {
+          setProfile(JSON.parse(storedProfile));
+        }
+        const storedScope = await AsyncStorage.getItem(DECISION_SCOPE_KEY);
+        if (storedScope) {
+          setDecisionScope(storedScope);
+          console.log('Decision scope loaded from AsyncStorage:', storedScope);
+        } else {
+          console.error('No decision scope found in AsyncStorage');
+        }
+      } catch (error) {
+        console.error('Failed to load data from storage:', error);
+      }
+    };
+
+    loadProfileAndScope();
+  }, []);
+
+  // Call getPropositions when decisionScope is set
+  useEffect(() => {
+    if (decisionScope) {
+      console.log('Decision scope is set, calling getPropositions');
+      getPropositions();
+    }
+  }, [decisionScope]);
+
+  const getPropositions = async () => {
+    console.log('Get Propositions called');
+    if (!decisionScope) {
+      console.error('Error: No decision scope entered');
+      return;
+    }
+    const userScope = new DecisionScope(decisionScope);
+    console.log('Using decision scope:', userScope.getName());
+
+    // Log the ECID or full identity map
+    console.log('Fetching identity map...');
+    try {
+      const identityMap = await Identity.getIdentities();
+      console.log('Identity Map:', identityMap);
+    } catch (error) {
+      console.error('Error fetching identity map:', error);
+    }
+
+    let ecid;
+    // Use getExperienceCloudId to retrieve the ECID
+    console.log('Fetching ECID...');
+    try {
+      ecid = await Identity.getExperienceCloudId();
+      if (!ecid) {
+        console.error('ECID not found');
+        return;
+      }
+      console.log('ECID found:', ecid);
+    } catch (error) {
+      console.error('Error fetching ECID:', error);
+    }
+
+    const xdmData = { "xdm": { "identityMap": { "ECID": { "id": ecid, "primary": true } } } };
+
+    // Adjust the getPropositions call
+    console.log('Fetching propositions...');
+    try {
+      const propositions: Map<string, Proposition> =
+        await Optimize.getPropositions([userScope]);
+      console.log('Propositions response received:', propositions);
+      if (propositions) {
+        const mappedOffers = propositions.get(userScope.getName())?.items.map(item => {
+          const characteristics = item.data.characteristics || {};
+          let parsedContent;
+          try {
+            parsedContent = JSON.parse(item.data.content);
+            console.log('Parsed Content:', parsedContent); // Log parsed content
+          } catch (e) {
+            console.error('Error parsing content:', e);
+            parsedContent = {};
+          }
+          return {
+            title: parsedContent.title || 'No Title',
+            text: parsedContent.text || 'No Text',
+            image: parsedContent.image || '',
+          };
+        }) || [];
+        setOffers(mappedOffers);
+        console.log('Mapped offers:', mappedOffers);
+      }
+    } catch (error) {
+      console.error('Error fetching propositions:', error);
+    }
+  };
+
+  const updateAndLogIdentity = async () => {
+    try {
+      const identityMap = new IdentityMap();
+      if (profile.email) {
+        identityMap.addItem({ id: profile.email, authenticatedState: AuthenticatedState.AUTHENTICATED, primary: true }, 'Email');
+      }
+      await Identity.updateIdentities(identityMap);
+      console.log('Updated identity map:', identityMap);
+    } catch (error) {
+      console.error('Error updating identity map:', error);
+    }
+  };
 
   return (
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Ionicons name="gift" size={48} color="#007AFF" />
-      <ThemedText style={{ fontSize: 24, marginTop: 12 }}>Offers</ThemedText>
+      <ThemedText style={{ fontSize: 24, marginTop: 12 }}>Offers View</ThemedText>
+      <FlatList
+        data={offers}
+        renderItem={({ item }) => <OfferCard offer={item} styles={styles} colors={colors} />}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.list}
+      />
     </ThemedView>
   );
 }

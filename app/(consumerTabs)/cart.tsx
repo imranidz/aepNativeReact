@@ -44,6 +44,9 @@ export default function CartTab() {
       fontSize: 14,
       opacity: 0.7,
     },
+    list: {
+      padding: 16,
+    },
   });
 
   const { cart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
