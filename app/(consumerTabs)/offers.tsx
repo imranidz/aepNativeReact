@@ -8,6 +8,7 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 import { Optimize, DecisionScope, Proposition } from '@adobe/react-native-aepoptimize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Identity, IdentityMap, AuthenticatedState } from '@adobe/react-native-aepedgeidentity';
+import { useCart } from '../../components/CartContext';
 
 const PROFILE_KEY = 'userProfile';
 const DECISION_SCOPE_KEY = 'decisionScope';
@@ -66,9 +67,13 @@ interface Offer {
   title: string;
   text: string;
   image: string;
+  price: number;
+  name: string; // Add name property
+  category?: string; // Optional category property
+  sku?: string; // Optional SKU property
 }
 
-const OfferCard = ({ offer, styles, colors }: { offer: Offer, styles: any, colors: any }) => {
+const OfferCard = ({ offer, styles, colors, addToCart }: { offer: Offer, styles: any, colors: any, addToCart: (offer: Offer) => void }) => {
   return (
     <View style={[styles.card, { alignItems: 'center', backgroundColor: colors.card, padding: 16, width: '100%' }]}>
       <Image
@@ -79,6 +84,18 @@ const OfferCard = ({ offer, styles, colors }: { offer: Offer, styles: any, color
       <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', width: '80%' }}>
         <ThemedText style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: 4, textAlign: 'left' }}>{offer.title}</ThemedText>
         <ThemedText style={{ color: colors.text, fontSize: 14, textAlign: 'left' }}>{offer.text}</ThemedText>
+        <ThemedText style={{ color: colors.text, fontSize: 16, fontWeight: 'bold', marginTop: 4, textAlign: 'left' }}>${offer.price.toFixed(2)}</ThemedText>
+        <TouchableOpacity onPress={() => addToCart({
+          name: offer.title || 'Unnamed Offer',
+          title: offer.title,
+          category: offer.category || 'defaultCategory',
+          sku: offer.sku || 'defaultSku',
+          price: offer.price,
+          text: offer.text,
+          image: offer.image
+        })} style={{ marginTop: 8, paddingVertical: 8, paddingHorizontal: 16, backgroundColor: colors.primary, borderRadius: 8 }}>
+          <ThemedText style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Add to Cart</ThemedText>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -89,6 +106,7 @@ export default function OffersTab() {
   const { profile, setProfile, decisionScope, setDecisionScope } = useProfileStorage();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { addToCart } = useCart();
 
   const styles = StyleSheet.create({
     card: {
@@ -168,6 +186,9 @@ export default function OffersTab() {
               title: parsedContent.title || 'No Title',
               text: parsedContent.text || 'No Text',
               image: parsedContent.image || '',
+              price: parsedContent.price || 0,
+              name: parsedContent.title || 'Unnamed Offer',
+              category: parsedContent.category || 'defaultCategory',
             };
           }) || [];
           setOffers(updatedOffers);
@@ -258,9 +279,10 @@ export default function OffersTab() {
             parsedContent = {};
           }
           return {
-            title: parsedContent.title || 'No Title',
+            title: parsedContent.name || 'No name',
             text: parsedContent.text || 'No Text',
             image: parsedContent.image || '',
+            price: parsedContent.price || 0,
           };
         }) || [];
         setOffers(mappedOffers);
@@ -290,7 +312,7 @@ export default function OffersTab() {
       <ThemedText style={{ fontSize: 24, marginTop: 12 }}>Offers View</ThemedText>
       <FlatList
         data={offers}
-        renderItem={({ item }) => <OfferCard offer={item} styles={styles} colors={colors} />}
+        renderItem={({ item }) => <OfferCard offer={item} styles={styles} colors={colors} addToCart={addToCart} />}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.list}
       />

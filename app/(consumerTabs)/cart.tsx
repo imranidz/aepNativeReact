@@ -8,9 +8,11 @@ import { MobileCore } from '@adobe/react-native-aepcore';
 import { useCart } from '../../components/CartContext';
 import { PRODUCT_IMAGES } from './_home/[category]';
 import { Identity } from '@adobe/react-native-aepedgeidentity';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './_layout';
 
 export default function CartTab() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const { colors } = useTheme();
 
@@ -49,9 +51,9 @@ export default function CartTab() {
     },
   });
 
-  const { cart, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+  const { cart, incrementQuantity, decrementQuantity, removeFromCart, addToCart } = useCart();
 
-  const modifiedCart = cart.map(item => ({ ...item, sku: item.sku || 'defaultSku' }));
+  const modifiedCart = cart.map(item => ({ ...item, sku: item.sku || 'defaultSku', title: item.title || 'Unnamed Offer' }));
 
   const [identityMap, setIdentityMap] = useState({});
 
@@ -88,9 +90,9 @@ export default function CartTab() {
               <TouchableOpacity style={[styles.card, { backgroundColor: colors.card, flexDirection: 'row' }]} onPress={() => console.log('Item pressed:', item.name)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image
-                    source={PRODUCT_IMAGES[item.sku]}
+                    source={item.image && item.image.startsWith('http') ? { uri: item.image } : PRODUCT_IMAGES[item.sku] }
                     style={{ width: 64, height: 64, borderRadius: 12, marginRight: 16 }}
-                    onError={(error) => console.error('Error loading image for SKU:', item.sku, error)}
+                    onError={(error) => console.error('Error loading image for item:', item.name, error)}
                   />
                   <View style={{ flex: 1 }}>
                     <ThemedText style={styles.cardTitle}>{item.name}</ThemedText>

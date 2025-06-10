@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 // Define your navigation types
-type RootStackParamList = {
+export type RootStackParamList = {
   home: undefined;
   offers: undefined;
   cart: undefined;
