@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.WeRetail"
+      "bundleIdentifier": "com.cmtBootCamp.AEPSampleAppNewArchEnabled"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/productImages/weretail-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.WeRetail"
+      "package": "com.cmtBootCamp.AEPSampleAppNewArchEnabled"
     },
     "web": {
       "bundler": "metro",

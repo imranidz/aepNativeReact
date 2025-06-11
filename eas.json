@@ -7,23 +7,32 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "workflow": "bare",
       "android": {
         "buildType": "apk"
       },
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "buildConfiguration": "Debug"
       }
     },
     "preview": {
       "distribution": "internal",
-      "workflow": "bare"
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "buildConfiguration": "Release"
+      }
     },
     "production": {
-      "workflow": "bare",
       "autoIncrement": true,
       "android": {
-        "buildType": "aab"
+        "buildType": "app-bundle"
+      },
+      "ios": {
+        "distribution": "store",
+        "buildConfiguration": "Release",
+        "developmentTeam": "Z3TW72MLFV"
       }
     }
   },

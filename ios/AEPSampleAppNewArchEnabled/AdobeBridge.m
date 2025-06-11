@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 #import "AdobeBridge.h"
 #import <UIKit/UIKit.h>
+#import <React/RCTBridgeModule.h>
 
 @import AEPCore;
 @import AEPLifecycle;
@@ -29,7 +30,13 @@ governing permissions and limitations under the License.
 @import AEPUserProfile;
 @import AEPServices;
 
+@interface RCT_EXTERN_MODULE(AdobeBridge, NSObject)
+RCT_EXTERN_METHOD(configureWithAppId:(NSString *)appId)
+@end
+
 @implementation AdobeBridge
+
+RCT_EXPORT_MODULE();
 
 + (void)configure:(UIApplicationState)appState {
     [AEPMobileCore setLogLevel:AEPLogLevelDebug];
@@ -45,8 +52,6 @@ governing permissions and limitations under the License.
     ];
 
     [AEPMobileCore registerExtensions:extensionsToRegister completion:^{
-        [AEPMobileCore configureWithAppId:@"d4b7d80f6e21/6b1086c5b3d0/launch-065f91be4881-development"];
-
         if (appState != UIApplicationStateBackground) {
             [AEPMobileCore lifecycleStart:nil]; // Added for foreground handling
         }
@@ -61,6 +66,10 @@ governing permissions and limitations under the License.
 + (void)lifecyclePause
 {
     [AEPMobileCore lifecyclePause];
+}
+
+RCT_EXPORT_METHOD(configureWithAppId:(NSString *)appId) {
+    [AEPMobileCore configureWithAppId:appId];
 }
 
 @end
