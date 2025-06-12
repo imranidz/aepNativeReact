@@ -109,9 +109,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.AEPSampleAppNewArchEnabled'
+    namespace 'com.cmtBootCamp.AEPSampleAppNewArchEnabled'
     defaultConfig {
-        applicationId 'com.AEPSampleAppNewArchEnabled'
+        applicationId 'com.cmtBootCamp.AEPSampleAppNewArchEnabled'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -193,19 +193,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-
-    // Firebase BoM and Analytics
-    //implementation platform('com.google.firebase:firebase-bom:33.14.0')
-    //implementation 'com.google.firebase:firebase-analytics'
 }
 
 if (rnVersion < versionToNumber(0, 75, 0)) {
     apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
     applyNativeModulesAppBuildGradle(project)
-}
-
-//apply plugin: 'com.google.gms.google-services'
-
-ext {
-    kotlinVersion = findProperty('android.kotlinVersion') ?: '2.1.0'
 }
