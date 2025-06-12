@@ -4,11 +4,11 @@
     "slug": "WeRetail",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/productImages/weretail-logo.png",
+    "icon": ".assets/images/productImages/EA-App-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/productImages/weretail-logo.png",
+      "image": "./assets/images/productImages/EA-App-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/productImages/weretail-logo.png",
+        "foregroundImage": "./assets/images/productImages/EA-App-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.cmtBootCamp.AEPSampleAppNewArchEnabled"
@@ -26,7 +26,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/productImages/weretail-logo.png"
+      "favicon": "./assets/images/productImages/EA-App-icon.png"
     },
     "plugins": [
       "expo-router",

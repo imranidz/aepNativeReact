@@ -31,8 +31,7 @@
       },
       "ios": {
         "distribution": "store",
-        "buildConfiguration": "Release",
-        "developmentTeam": "Z3TW72MLFV"
+        "buildConfiguration": "Release"
       }
     }
   },
