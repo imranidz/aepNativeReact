@@ -49,15 +49,30 @@ target 'AEPSampleAppNewArchEnabled' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
 
-  post_install do |installer| 
-      # Added by Adobe Expo SDK Plugin
-      installer.pods_project.targets.each do |t|
-          if t.name.start_with?("AEP")
-            t.build_configurations.each do |bc|
-                bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
-            end
-          end
+  # Add AEP dependencies
+  pod 'AEPOptimize', '~> 6.0'
+  pod 'AEPMessaging', '~> 6.0'
+  pod 'AEPPlaces', '~> 6.0'
+  pod 'AEPEdgeConsent', '~> 6.0'
+  pod 'AEPAssurance', '~> 6.0'
+  pod 'AEPEdge', '~> 6.0'
+  pod 'AEPEdgeIdentity', '~> 6.0'
+  pod 'AEPCore', '~> 6.0'
+  pod 'AEPIdentity', '~> 6.0'
+  pod 'AEPSignal', '~> 6.0'
+  pod 'AEPLifecycle', '~> 6.0'
+  pod 'AEPUserProfile', '~> 6.0'
+  pod 'AEPServices', '~> 6.0'  # Add this line
+  pod 'AEPRulesEngine', '~> 6.0'  
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |t|
+      if t.name.start_with?("AEP")
+        t.build_configurations.each do |bc|
+          bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+        end
       end
+    end
     
     react_native_post_install(
       installer,

@@ -4,7 +4,7 @@
     "slug": "WeRetail",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": ".assets/images/productImages/EA-App-icon.png",
+    "icon": "./assets/images/productImages/EA-App-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cmtBootCamp.AEPSampleAppNewArchEnabled"
+      "bundleIdentifier": "com.cmtBootCamp.AEPSampleAppNewArchEnabled",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
