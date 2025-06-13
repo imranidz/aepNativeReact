@@ -26,11 +26,17 @@
       },
       "ios": {
         "buildConfiguration": "Release",
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "image": "latest",
+        "cache": {
+          "key": "new-arch-cache"
+        }
       },
       "env": {
         "RCT_NEW_ARCH_ENABLED": "1",
-        "EXPO_NEW_ARCH_ENABLED": "1"
+        "EXPO_NEW_ARCH_ENABLED": "1",
+        "RCT_FABRIC_ENABLED": "1",
+        "RCT_NEW_ARCH_ENABLED": "1"
       }
     },
     "production": {
@@ -41,11 +47,17 @@
       "ios": {
         "distribution": "store",
         "buildConfiguration": "Release",
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "image": "latest",
+        "cache": {
+          "key": "new-arch-cache"
+        }
       },
       "env": {
         "RCT_NEW_ARCH_ENABLED": "1",
-        "EXPO_NEW_ARCH_ENABLED": "1"
+        "EXPO_NEW_ARCH_ENABLED": "1",
+        "RCT_FABRIC_ENABLED": "1",
+        "RCT_NEW_ARCH_ENABLED": "1"
       }
     }
   },
