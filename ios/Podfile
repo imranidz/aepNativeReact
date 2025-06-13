@@ -50,27 +50,44 @@ target 'AEPSampleAppNewArchEnabled' do
   )
 
   # Add AEP dependencies
+  # Core and Services
+  pod 'AEPCore', '>= 6.0'
   pod 'AEPServices', '>= 6.0', :modular_headers => true
   pod 'AEPRulesEngine', '>= 6.0', :modular_headers => true
+  
+  # Identity and Profile
+  pod 'AEPIdentity', '>= 6.0'
+  pod 'AEPUserProfile', '>= 6.0'
+  
+  # Edge and Related Services
+  pod 'AEPEdge', '>= 6.0'
+  pod 'AEPEdgeIdentity', '>= 6.0'
+  pod 'AEPEdgeConsent', '>= 6.0'
+  
+  # Additional Services
   pod 'AEPOptimize', '>= 6.0'
   pod 'AEPMessaging', '>= 6.0'
   pod 'AEPPlaces', '>= 6.0'
-  pod 'AEPEdgeConsent', '>= 6.0'
   pod 'AEPAssurance', '>= 6.0'
-  pod 'AEPEdge', '>= 6.0'
-  pod 'AEPEdgeIdentity', '>= 6.0'
-  pod 'AEPCore', '>= 6.0'
-  pod 'AEPIdentity', '>= 6.0'
   pod 'AEPSignal', '>= 6.0'
   pod 'AEPLifecycle', '>= 6.0'
-  pod 'AEPUserProfile', '>= 6.0'
 
   post_install do |installer|
-    installer.pods_project.targets.each do |t|
-      if t.name.start_with?("AEP")
-        t.build_configurations.each do |bc|
-          bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
-           bc.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+    # Configure AEP pods build settings
+    installer.pods_project.targets.each do |target|
+      if target.name.start_with?("AEP")
+        target.build_configurations.each do |config|
+          # Common settings for all AEP pods
+          config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+          
+          # Additional settings for specific pods
+          if ['AEPServices', 'AEPRulesEngine'].include?(target.name)
+            config.build_settings['DEFINES_MODULE'] = 'YES'
+            config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+            config.build_settings['SWIFT_INCLUDE_PATHS'] = '$(SRCROOT)/Pods/Headers/Public'
+            config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) "$(SRCROOT)/Pods/Headers/Public/**"'
+          end
         end
       end
     end
