@@ -50,6 +50,8 @@ target 'AEPSampleAppNewArchEnabled' do
   )
 
   # Add AEP dependencies
+  pod 'AEPServices', '>= 6.0', :modular_headers => true
+  pod 'AEPRulesEngine', '>= 6.0', :modular_headers => true
   pod 'AEPOptimize', '>= 6.0'
   pod 'AEPMessaging', '>= 6.0'
   pod 'AEPPlaces', '>= 6.0'
@@ -62,8 +64,6 @@ target 'AEPSampleAppNewArchEnabled' do
   pod 'AEPSignal', '>= 6.0'
   pod 'AEPLifecycle', '>= 6.0'
   pod 'AEPUserProfile', '>= 6.0'
-  pod 'AEPServices', '>= 6.0', :modular_headers => true
-  pod 'AEPRulesEngine', '>= 6.0', :modular_headers => true 
 
   post_install do |installer|
     installer.pods_project.targets.each do |t|
