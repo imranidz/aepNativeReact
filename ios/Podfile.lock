@@ -129,10 +129,10 @@ PODS:
     - fmt (= 9.1.0)
     - glog
   - RCTAEPAssurance (6.0.2):
-    - AEPAssurance (< 6.0.0, >= 5.0.0)
+    - AEPAssurance (>= 6.0.0)
     - React
   - RCTAEPCampaignClassic (6.0.2):
-    - AEPCampaignClassic (< 6.0.0, >= 5.0.0)
+    - AEPCampaignClassic (>= 6.0.0)
     - React
   - RCTAEPCore (6.0.2):
     - AEPCore (>= 6.0.0)
@@ -141,31 +141,31 @@ PODS:
     - AEPSignal (>= 6.0.0)
     - React
   - RCTAEPEdge (6.0.2):
-    - AEPEdge (< 6.0.0, >= 5.0.0)
+    - AEPEdge (>= 6.0.0)
     - React
   - RCTAEPEdgeBridge (6.0.2):
-    - AEPEdgeBridge (< 6.0.0, >= 5.0.0)
+    - AEPEdgeBridge (>= 6.0.0)
     - React
   - RCTAEPEdgeConsent (6.0.2):
-    - AEPEdgeConsent (< 6.0.0, >= 5.0.0)
+    - AEPEdgeConsent (>=6.0.0)
     - React
   - RCTAEPEdgeIdentity (6.0.2):
-    - AEPEdgeIdentity (< 6.0.0, >= 5.0.0)
+    - AEPEdgeIdentity (>= 6.0.0)
     - React
   - RCTAEPMessaging (6.0.5):
-    - AEPMessaging (< 6.0.0, >= 5.3.0)
+    - AEPMessaging (>= 6.0.0)
     - React
   - RCTAEPOptimize (6.1.0):
-    - AEPOptimize (< 6.0.0, >= 5.0.0)
+    - AEPOptimize (>= 6.0.0)
     - React
   - RCTAEPPlaces (6.0.3):
-    - AEPPlaces (< 6.0.0, >= 5.0.0)
+    - AEPPlaces (>= 6.0.0)
     - React
   - RCTAEPTarget (6.0.2):
-    - AEPTarget (< 6.0.0, >= 5.0.0)
+    - AEPTarget (>= 6.0.0)
     - React
   - RCTAEPUserProfile (6.0.2):
-    - AEPUserProfile (< 6.0.0, >= 5.0.0)
+    - AEPUserProfile (>= 6.0.0)
     - React
   - RCTDeprecation (0.75.5)
   - RCTRequired (0.75.5)
