@@ -15,7 +15,8 @@
         "buildConfiguration": "Debug"
       },
       "env": {
-        "RCT_NEW_ARCH_ENABLED": "1"
+        "RCT_NEW_ARCH_ENABLED": "1",
+        "EXPO_NEW_ARCH_ENABLED": "1"
       }
     },
     "preview": {
@@ -24,7 +25,12 @@
         "buildType": "apk"
       },
       "ios": {
-        "buildConfiguration": "Release"
+        "buildConfiguration": "Release",
+        "resourceClass": "m-medium"
+      },
+      "env": {
+        "RCT_NEW_ARCH_ENABLED": "1",
+        "EXPO_NEW_ARCH_ENABLED": "1"
       }
     },
     "production": {
@@ -34,7 +40,12 @@
       },
       "ios": {
         "distribution": "store",
-        "buildConfiguration": "Release"
+        "buildConfiguration": "Release",
+        "resourceClass": "m-medium"
+      },
+      "env": {
+        "RCT_NEW_ARCH_ENABLED": "1",
+        "EXPO_NEW_ARCH_ENABLED": "1"
       }
     }
   },
