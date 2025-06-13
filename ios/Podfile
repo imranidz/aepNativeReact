@@ -50,27 +50,25 @@ target 'AEPSampleAppNewArchEnabled' do
   )
 
   # Add AEP dependencies
-  # Core and Services
-  pod 'AEPCore', '>= 6.0'
-  pod 'AEPServices', '>= 6.0', :modular_headers => true
-  pod 'AEPRulesEngine', '>= 6.0', :modular_headers => true
-  
-  # Identity and Profile
-  pod 'AEPIdentity', '>= 6.0'
-  pod 'AEPUserProfile', '>= 6.0'
-  
-  # Edge and Related Services
-  pod 'AEPEdge', '>= 6.0'
-  pod 'AEPEdgeIdentity', '>= 6.0'
-  pod 'AEPEdgeConsent', '>= 6.0'
-  
-  # Additional Services
-  pod 'AEPOptimize', '>= 6.0'
-  pod 'AEPMessaging', '>= 6.0'
-  pod 'AEPPlaces', '>= 6.0'
-  pod 'AEPAssurance', '>= 6.0'
-  pod 'AEPSignal', '>= 6.0'
-  pod 'AEPLifecycle', '>= 6.0'
+  # Use modular_headers for ALL AEP pods
+  %w[
+    AEPServices
+    AEPRulesEngine
+    AEPCore
+    AEPEdge
+    AEPEdgeConsent
+    AEPEdgeIdentity
+    AEPMessaging
+    AEPOptimize
+    AEPPlaces
+    AEPAssurance
+    AEPIdentity
+    AEPSignal
+    AEPLifecycle
+    AEPUserProfile
+  ].each do |pod_name|
+    pod pod_name, '>= 6.0', :modular_headers => true
+  end
 
   post_install do |installer|
     # Configure AEP pods build settings
