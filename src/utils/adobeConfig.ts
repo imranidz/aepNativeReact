@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeModules } from 'react-native';
+import { MobileCore, Identity, LogLevel } from '@adobe/react-native-aepcore';
 
 const { AppIdModule } = NativeModules;
 
@@ -32,5 +33,23 @@ export const initializeAdobe = async () => {
     }
   } catch (error) {
     console.error('Error initializing Adobe:', error);
+  }
+};
+
+export const configureAdobe = async (appId: string) => {
+  try {
+    MobileCore.setLogLevel(LogLevel.DEBUG);
+    await MobileCore.configureWithAppId(appId);
+    
+    // Register extensions
+    // @ts-ignore
+    await MobileCore.registerExtensions([Identity]);
+    
+    // Start the SDK
+    // @ts-ignore
+    await MobileCore.start();
+  } catch (error) {
+    console.error('Error configuring Adobe SDK:', error);
+    throw error;
   }
 }; 

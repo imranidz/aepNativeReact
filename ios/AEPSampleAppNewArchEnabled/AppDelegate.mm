@@ -10,47 +10,11 @@ governing permissions and limitations under the License.
 */
 
 #import "AppDelegate.h"
-#import <AEPCore/AEPCore.h>
-#import <AEPIdentity/AEPIdentity.h>
-#import <AEPLifecycle/AEPLifecycle.h>
-#import <AEPSignal/AEPSignal.h>
-#import <AEPEdge/AEPEdge.h>
-#import <AEPEdgeIdentity/AEPEdgeIdentity.h>
-#import <AEPEdgeConsent/AEPEdgeConsent.h>
-#import <AEPMessaging/AEPMessaging.h>
-#import <AEPOptimize/AEPOptimize.h>
-#import <AEPPlaces/AEPPlaces.h>
-#import <AEPAssurance/AEPAssurance.h>
-#import <AEPUserProfile/AEPUserProfile.h>
-
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate {
   UIApplicationState appState;
-}
-
-+ (void)setAdobeAppId:(NSString *)appId {
-    if (appId && appId.length > 0) {
-        [AEPMobileCore configureWithAppId:appId];
-        
-        // Register extensions
-        [AEPMobileCore registerExtensions:@[
-            [AEPIdentity class],
-            [AEPLifecycle class],
-            [AEPSignal class],
-            [AEPEdge class],
-            [AEPEdgeIdentity class],
-            [AEPEdgeConsent class],
-            [AEPMessaging class],
-            [AEPOptimize class],
-            [AEPPlaces class],
-            [AEPAssurance class],
-            [AEPUserProfile class]
-        ] completion:^{
-            [AEPMobileCore lifecycleStart:nil];
-        }];
-    }
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -60,26 +24,6 @@ governing permissions and limitations under the License.
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
-
-  // Initialize with a default or empty app ID
-  [AEPMobileCore configureWithAppId:@""];
-  
-  // Register extensions
-  [AEPMobileCore registerExtensions:@[
-    [AEPIdentity class],
-    [AEPLifecycle class],
-    [AEPSignal class],
-    [AEPEdge class],
-    [AEPEdgeIdentity class],
-    [AEPEdgeConsent class],
-    [AEPMessaging class],
-    [AEPOptimize class],
-    [AEPPlaces class],
-    [AEPAssurance class],
-    [AEPUserProfile class]
-  ] completion:^{
-    [AEPMobileCore lifecycleStart:nil];
-  }];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
@@ -125,19 +69,6 @@ governing permissions and limitations under the License.
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
   return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
-}
-
-
-// Setup for Lifecycle Start when entering foreground
-- (void)applicationWillEnterForeground:(UIApplication *)application{
-  appState = application.applicationState;
-  [AEPMobileCore lifecycleStart];
-}
-
-// Setup for Lifecycle Start when entering background
-- (void)applicationDidEnterBackground:(UIApplication *)application{
-  appState = application.applicationState;
-  [AEPMobileCore lifecyclePause];
 }
 
 @end

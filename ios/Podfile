@@ -49,47 +49,23 @@ target 'AEPSampleAppNewArchEnabled' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
 
-  # Add AEP dependencies
-  # Use modular_headers for ALL AEP pods
-  %w[
-    AEPServices
-    AEPRulesEngine
-    AEPCore
-    AEPEdge
-    AEPEdgeConsent
-    AEPEdgeIdentity
-    AEPMessaging
-    AEPOptimize
-    AEPPlaces
-    AEPAssurance
-    AEPIdentity
-    AEPSignal
-    AEPLifecycle
-    AEPUserProfile
-  ].each do |pod_name|
-    pod pod_name, '>= 6.0', :modular_headers => true
-  end
+  # ✅ All Adobe SDKs: 7.x versions
+  pod 'AEPCore', '>= 7.0'
+  pod 'AEPServices', '>= 7.0'
+  pod 'AEPRulesEngine', '>= 7.0'
+  pod 'AEPEdge', '>= 7.0'
+  pod 'AEPEdgeConsent', '>= 7.0'
+  pod 'AEPEdgeIdentity', '>= 7.0'
+  pod 'AEPMessaging', '>= 7.0'
+  pod 'AEPOptimize', '>= 7.0'
+  pod 'AEPPlaces', '>= 7.0.1'
+  pod 'AEPAssurance', '>= 7.0'
+  pod 'AEPIdentity', '>= 7.0'
+  pod 'AEPSignal', '>= 7.0'
+  pod 'AEPLifecycle', '>= 7.0'
+  pod 'AEPUserProfile', '>= 7.0'
 
-  post_install do |installer|
-    # Configure AEP pods build settings
-    installer.pods_project.targets.each do |target|
-      if target.name.start_with?("AEP")
-        target.build_configurations.each do |config|
-          # Common settings for all AEP pods
-          config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
-          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
-          
-          # Additional settings for specific pods
-          if ['AEPServices', 'AEPRulesEngine'].include?(target.name)
-            config.build_settings['DEFINES_MODULE'] = 'YES'
-            config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
-            config.build_settings['SWIFT_INCLUDE_PATHS'] = '$(SRCROOT)/Pods/Headers/Public'
-            config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) "$(SRCROOT)/Pods/Headers/Public/**"'
-          end
-        end
-      end
-    end
-    
+  post_install do |installer|   
     react_native_post_install(
       installer,
       config[:reactNativePath],

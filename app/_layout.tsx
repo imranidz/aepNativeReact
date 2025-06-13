@@ -7,6 +7,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { CartProvider } from '../components/CartContext';
 import { Image } from 'react-native';
+import { initializeAdobe } from '../src/utils/adobeConfig';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -21,6 +22,11 @@ export default function RootLayout() {
   const isDark = scheme === 'dark';
 
   useEffect(() => {
+    // Initialize Adobe SDK
+    initializeAdobe().catch(error => {
+      console.error('Failed to initialize Adobe SDK:', error);
+    });
+    
     // Hide the splash screen after the app is ready
     SplashScreen.hideAsync();
   }, []);
@@ -28,12 +34,16 @@ export default function RootLayout() {
   useEffect(() => {
     if (isFocused) {
       // Only run when HomeTab is actually focused
-      MobileCore.trackState('HomeTab', {
-        'web.webPageDetails.name': 'Home',
-        'application.name': 'WeRetailMobileApp',
-        // Add any additional dynamic data here
-      });
-      console.log('HomeTab viewed - trigger Adobe tracking here');
+      try {
+        MobileCore.trackState('HomeTab', {
+          'web.webPageDetails.name': 'Home',
+          'application.name': 'WeRetailMobileApp',
+          // Add any additional dynamic data here
+        });
+        console.log('HomeTab viewed - Adobe tracking successful');
+      } catch (error) {
+        console.error('Failed to track HomeTab view:', error);
+      }
     }
   }, [isFocused]);
 
