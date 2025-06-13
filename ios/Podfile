@@ -38,8 +38,8 @@ target 'AEPSampleAppNewArchEnabled' do
   use_expo_modules!
   config = use_native_modules!
 
-  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
-  use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
+  linkage = (podfile_properties['ios.useFrameworks'] || ENV['USE_FRAMEWORKS'] || 'static').to_sym
+  use_frameworks! :linkage => linkage
 
   use_react_native!(
     :path => config[:reactNativePath],
