@@ -70,6 +70,7 @@ target 'AEPSampleAppNewArchEnabled' do
       if t.name.start_with?("AEP")
         t.build_configurations.each do |bc|
           bc.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -no-verify-emitted-module-interface'
+           bc.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
         end
       end
     end
