@@ -15,8 +15,8 @@
         "buildConfiguration": "Debug"
       },
       "env": {
-        "RCT_NEW_ARCH_ENABLED": "1",
-        "EXPO_NEW_ARCH_ENABLED": "1"
+        "RCT_NEW_ARCH_ENABLED": "0",
+        "EXPO_NEW_ARCH_ENABLED": "0"
       }
     },
     "preview": {
@@ -27,15 +27,12 @@
       "ios": {
         "buildConfiguration": "Release",
         "resourceClass": "m-medium",
-        "image": "latest",
-        "cache": {
-          "key": "new-arch-cache"
-        }
+        "image": "latest"
       },
       "env": {
-        "RCT_NEW_ARCH_ENABLED": "1",
-        "EXPO_NEW_ARCH_ENABLED": "1",
-        "RCT_FABRIC_ENABLED": "1"
+        "RCT_NEW_ARCH_ENABLED": "0",
+        "EXPO_NEW_ARCH_ENABLED": "0",
+        "RCT_FABRIC_ENABLED": "0"
       }
     },
     "production": {
@@ -47,15 +44,12 @@
         "distribution": "store",
         "buildConfiguration": "Release",
         "resourceClass": "m-medium",
-        "image": "latest",
-        "cache": {
-          "key": "new-arch-cache"
-        }
+        "image": "latest"
       },
       "env": {
-        "RCT_NEW_ARCH_ENABLED": "1",
-        "EXPO_NEW_ARCH_ENABLED": "1",
-        "RCT_FABRIC_ENABLED": "1"
+        "RCT_NEW_ARCH_ENABLED": "0",
+        "EXPO_NEW_ARCH_ENABLED": "0",
+        "RCT_FABRIC_ENABLED": "0"
       }
     }
   },
