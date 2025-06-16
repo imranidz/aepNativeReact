@@ -49,3 +49,5 @@ Thumbs.db
 *.orig.*
 *.log
 .env
+
+*.AuthKey_*.p8

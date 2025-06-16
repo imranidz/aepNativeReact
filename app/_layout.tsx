@@ -4,10 +4,11 @@ import 'react-native-reanimated';
 import { Drawer } from 'expo-router/drawer';
 import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { MobileCore } from '@adobe/react-native-aepcore';
+import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
+import { Assurance } from '@adobe/react-native-aepassurance';
 import { CartProvider } from '../components/CartContext';
 import { Image } from 'react-native';
-import { initializeAdobe } from '../src/utils/adobeConfig';
+import { configureAdobe, getStoredAppId } from '../src/utils/adobeConfig';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -23,9 +24,23 @@ export default function RootLayout() {
 
   useEffect(() => {
     // Initialize Adobe SDK
-    initializeAdobe().catch(error => {
-      console.error('Failed to initialize Adobe SDK:', error);
-    });
+    const initAdobe = async () => {
+      try {
+        const appId = await getStoredAppId();
+        if (appId) {
+          // Set debug logging
+          MobileCore.setLogLevel(LogLevel.DEBUG);
+          await configureAdobe(appId);
+          console.log('Adobe SDK and Assurance initialized successfully');
+        } else {
+          console.log('No App ID found, Adobe SDK not initialized');
+        }
+      } catch (error) {
+        console.error('Failed to initialize Adobe SDK:', error);
+      }
+    };
+    
+    initAdobe();
     
     // Hide the splash screen after the app is ready
     SplashScreen.hideAsync();

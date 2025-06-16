@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { useTheme } from '@react-navigation/native';
+import { configureAdobe } from '../../src/utils/adobeConfig';
 
 const { AppIdModule } = NativeModules;
 const APP_ID_STORAGE_KEY = '@adobe_app_id';
@@ -24,10 +25,11 @@ const AppIdConfigView = () => {
   const loadSavedAppId = async () => {
     try {
       const savedAppId = await AsyncStorage.getItem(APP_ID_STORAGE_KEY);
+      console.log('Loaded saved App ID:', savedAppId);
       if (savedAppId) {
         setAppId(savedAppId);
         // Configure SDK with saved App ID
-        await AppIdModule.configureWithAppId(savedAppId);
+        await configureAdobe(savedAppId);
       }
     } catch (error) {
       console.error('Error loading App ID:', error);
@@ -41,13 +43,17 @@ const AppIdConfigView = () => {
         return;
       }
 
+      console.log('Attempting to save App ID:', appId.trim());
+      
       // Save to AsyncStorage
       await AsyncStorage.setItem(APP_ID_STORAGE_KEY, appId.trim());
+      console.log('Successfully saved App ID to AsyncStorage');
       
       // Configure Adobe SDK with new App ID
-      await AppIdModule.configureWithAppId(appId.trim());
+      console.log('Configuring Adobe SDK with App ID:', appId.trim());
+      await configureAdobe(appId.trim());
       
-      Alert.alert('Success', 'App ID saved and configured successfully');
+      Alert.alert('Success', 'App ID saved and SDK configured successfully');
     } catch (error) {
       console.error('Error saving App ID:', error);
       Alert.alert('Error', 'Failed to save or configure App ID');

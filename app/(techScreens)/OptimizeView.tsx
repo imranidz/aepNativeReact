@@ -2,7 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import { Identity, IdentityMap, IdentityItem, AuthenticatedState } from '@adobe/react-native-aepedgeidentity';
 import React, {useState, useEffect, useRef} from 'react';
 import {RecyclerListView, DataProvider, LayoutProvider} from 'recyclerlistview';
-import {  useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import {WebView} from 'react-native-webview';
@@ -24,8 +24,6 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 
 const ViewTypes = {
   header: 0,
@@ -465,22 +463,23 @@ export default () => {
 
   const handleUserDecisionScopeChange = (text: string) => {
     setUserDecisionScope(text);
-    const newDecisionScopeJson = new DecisionScope(text);
+    const newDecisionScope = new DecisionScope(text);
     setJsonProposition(undefined); // Clear previous proposition
-    Optimize.updatePropositions([newDecisionScopeJson]);
+    Optimize.updatePropositions([newDecisionScope]);
   };
 
   const handleSaveDecisionScope = async () => {
-    const newDecisionScopeJson = new DecisionScope(userDecisionScope);
-    setJsonProposition(undefined); // Clear previous proposition
-    Optimize.updatePropositions([newDecisionScopeJson]);
     try {
+      const newDecisionScope = new DecisionScope(userDecisionScope);
+      setJsonProposition(undefined); // Clear previous proposition
+      await Optimize.updatePropositions([newDecisionScope]);
       await AsyncStorage.setItem('decisionScope', userDecisionScope);
-      console.log('Decision scope saved in AsyncStorage:', userDecisionScope); // Log the decision scope
+      console.log('Decision scope saved:', userDecisionScope);
+      setIsModalVisible(true);
     } catch (error) {
-      console.error('Error saving decision scope to AsyncStorage:', error);
+      console.error('Error saving decision scope:', error);
+      Alert.alert('Error', 'Failed to save decision scope');
     }
-    setIsModalVisible(true); // Show success modal
   };
 
   return (
