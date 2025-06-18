@@ -10,8 +10,9 @@
  * Author: ChatGPT for Cursor, 2025
  */
 
-import React, { useState, useEffect } from 'react';
-import { View, Alert, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Alert, ScrollView, TextInput, TouchableOpacity, NativeModules } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Identity } from '@adobe/react-native-aepedgeidentity';
 import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
 import { Optimize, DecisionScope, Proposition } from '@adobe/react-native-aepoptimize';
@@ -29,6 +30,38 @@ export default function OptimizeView() {
   const [version, setVersion] = useState('0.0.0');
   const [proposition, setProposition] = useState<Proposition | null>(null);
   const [decisionScopeInput, setDecisionScopeInput] = useState('');
+  const [currentScope, setCurrentScope] = useState<DecisionScope | null>(null);
+  const [isModuleInitialized, setIsModuleInitialized] = useState(false);
+  const scopeRef = useRef<DecisionScope | null>(null);
+
+  // AsyncStorage keys
+  const DECISION_SCOPE_KEY = 'optimize_decision_scope';
+
+  // Load saved decision scope on component mount
+  useEffect(() => {
+    const loadSavedScope = async () => {
+      try {
+        const savedScope = await AsyncStorage.getItem(DECISION_SCOPE_KEY);
+        if (savedScope) {
+          console.log("🔵 Loading saved decision scope from AsyncStorage");
+          setDecisionScopeInput(savedScope);
+        }
+      } catch (error) {
+        console.error("🔴 Error loading saved decision scope:", error);
+      }
+    };
+    loadSavedScope();
+  }, []);
+
+  // Save decision scope when it changes
+  const saveDecisionScope = async (scope: string) => {
+    try {
+      await AsyncStorage.setItem(DECISION_SCOPE_KEY, scope);
+      console.log("🔵 Saved decision scope to AsyncStorage");
+    } catch (error) {
+      console.error("🔴 Error saving decision scope:", error);
+    }
+  };
 
   // === Construct the DecisionScope properly ===
   const getDecisionScope = () => {
@@ -36,7 +69,46 @@ export default function OptimizeView() {
       Alert.alert('Error', 'Please enter a decision scope');
       return null;
     }
-    return new DecisionScope(decisionScopeInput);
+
+    // Clean the input string and ensure it's not already encoded
+    const cleanedInput = decisionScopeInput.trim();
+    
+    // Remove any surrounding quotes if they exist
+    const unquotedInput = cleanedInput.replace(/^"|"$/g, '');
+    
+    console.log("🔵 DecisionScope input details:", {
+      raw: decisionScopeInput,
+      cleaned: cleanedInput,
+      unquoted: unquotedInput,
+      length: unquotedInput.length,
+      hasWhitespace: cleanedInput !== decisionScopeInput,
+      hasQuotes: cleanedInput !== unquotedInput,
+      isBase64: unquotedInput.match(/^[A-Za-z0-9+/=]+$/) ? true : false
+    });
+
+    // Only create a new DecisionScope if the input has changed
+    if (!scopeRef.current || scopeRef.current.getName() !== unquotedInput) {
+      console.log("🔵 Creating new DecisionScope instance");
+      scopeRef.current = new DecisionScope(unquotedInput);
+    } else {
+      console.log("🔵 Reusing existing DecisionScope instance");
+    }
+
+    const scope = scopeRef.current;
+    const scopeName = scope.getName();
+    
+    console.log("🔵 DecisionScope details:", {
+      input: unquotedInput,
+      scopeName: scopeName,
+      isBase64: scopeName.match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+      length: unquotedInput.length,
+      scopeNameLength: scopeName.length,
+      match: unquotedInput === scopeName,
+      instanceId: scope === scopeRef.current ? "Same instance" : "Different instance"
+    });
+
+    setCurrentScope(scope);
+    return scope;
   };
 
   /**
@@ -45,40 +117,91 @@ export default function OptimizeView() {
   useEffect(() => {
     const initialize = async () => {
       try {
+        // Check if Optimize module is available
+        if (!NativeModules.AEPOptimize) {
+          console.error("🔴 AEPOptimize native module is not available");
+          Alert.alert("Error", "Optimize module is not properly initialized");
+          return;
+        }
+
         await MobileCore.setLogLevel(LogLevel.DEBUG);
         const ver = await Optimize.extensionVersion();
-        console.log("Optimize extension version:", ver);
+        console.log("🔵 Optimize extension version:", ver);
         setVersion(ver);
+        setIsModuleInitialized(true);
+
+        // Log the current configuration
+        console.log("🔵 Current configuration:", {
+          moduleAvailable: !!NativeModules.AEPOptimize,
+          version: ver,
+          isInitialized: true
+        });
       } catch (e) {
-        console.error(e);
+        console.error("🔴 Error initializing Optimize:", e);
+        Alert.alert("Error", "Failed to initialize Optimize module");
       }
     };
     initialize();
 
-    /**
-     * 2️⃣  Listen to incoming proposition updates.
-     * The callback runs whenever Edge returns new offers.
-     */
+    // Set up proposition update listener once when component mounts
+    console.log("🔵 Setting up onPropositionUpdate listener...");
     Optimize.onPropositionUpdate({
       call: (props) => {
-        console.log("🔵 onPropositionUpdate received props:", JSON.stringify(props, null, 2));
-        const scope = getDecisionScope();
-        console.log("🔵 Current scope:", scope?.getName());
-        if (scope) {
-          const prop = props.get(scope.getName());
-          console.log("🔵 Found proposition for scope:", scope.getName(), prop);
-          if (prop) {
-            console.log("🔵 Setting proposition:", JSON.stringify(prop, null, 2));
-            setProposition(prop);
+        console.log("🔵 🎉 onPropositionUpdate listener called!");
+        const allKeys = Array.from(props.keys());
+        console.log("🔵 All received proposition scopes:", allKeys);
+        
+        // Check if scopeRef.current exists and update proposition state
+        if (scopeRef.current) {
+          const scopeName = scopeRef.current.getName();
+          console.log("🔵 Looking for scope:", {
+            requested: scopeName,
+            isBase64: scopeName.match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+            length: scopeName.length
+          });
+
+          // Check if the scope exists in the props
+          if (props.has(scopeName)) {
+            console.log("🔵 Found proposition for scope:", scopeName);
+            const prop = props.get(scopeName);
+            if (prop) {
+              console.log("🔵 Proposition content:", JSON.stringify(prop, null, 2));
+              setProposition(prop);
+              
+              // Call offer.displayed() to track that the offer was shown (Adobe best practice)
+              try {
+                if (prop.items && prop.items.length > 0) {
+                  const item = prop.items[0];
+                  console.log("🔵 Calling offer.displayed() for item:", item.id);
+                  item.displayed(prop);
+                  console.log("🔵 ✅ offer.displayed() called successfully");
+                }
+              } catch (displayError) {
+                console.error("🔴 Error calling offer.displayed():", displayError);
+              }
+            } else {
+              console.log("🔴 Proposition is undefined for scope:", scopeName);
+              setProposition(null);
+            }
           } else {
-            console.log("🔵 No proposition found for scope:", scope.getName());
+            console.log("🔴 Scope not found in received propositions!");
+            console.log("🔵 Available scopes:", allKeys.map(key => ({
+              key,
+              isBase64: key.match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+              length: key.length
+            })));
+            setProposition(null);
           }
         } else {
-          console.log("🔵 No scope available for proposition update");
+          console.log("🔵 No scopeRef.current set.");
         }
       }
     });
-  }, []);
+    console.log("🔵 ✅ onPropositionUpdate listener registered successfully");
+
+    // No cleanup needed as the SDK handles this internally
+    return () => {};
+  }, []); // Empty dependency array - listener stays active
 
   /**
    * 3️⃣  Request new propositions from Edge.
@@ -86,6 +209,11 @@ export default function OptimizeView() {
    */
   const updatePropositions = async () => {
     try {
+      if (!isModuleInitialized) {
+        Alert.alert("Error", "Optimize module is not initialized");
+        return;
+      }
+
       const scope = getDecisionScope();
       if (!scope) return;
 
@@ -98,52 +226,55 @@ export default function OptimizeView() {
         ECID: [{ id: ecid, primary: true }]
       });
 
-      console.log("🔵 Calling updatePropositions with:", {
-        scope: scope.getName(),
-        xdm: Object.fromEntries(xdm)
+      // Log the complete request details
+      console.log("🔵 Request details:", {
+        scope: {
+          name: scope.getName(),
+          isBase64: scope.getName().match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+          length: scope.getName().length
+        },
+        xdm: Object.fromEntries(xdm),
+        ecid: ecid,
+        moduleInitialized: isModuleInitialized
       });
 
-      // Set up a promise to wait for the proposition update
-      const propositionPromise = new Promise<Proposition | null>((resolve) => {
-        const timeout = setTimeout(() => {
-          console.log("🔵 Timeout waiting for proposition update");
-          resolve(null);
-        }, 5000); // 5 second timeout
-
-        // Override the existing callback temporarily
-        const originalCallback = Optimize.onPropositionUpdate;
-        Optimize.onPropositionUpdate({
-          call: (props) => {
-            console.log("🔵 onPropositionUpdate received props:", JSON.stringify(props, null, 2));
-            const prop = props.get(scope.getName());
-            if (prop) {
-              console.log("🔵 Found proposition in callback:", JSON.stringify(prop, null, 2));
-              clearTimeout(timeout);
-              resolve(prop);
-            }
-          }
-        });
-      });
-
-      // Call updatePropositions
-      await Optimize.updatePropositions([scope], xdm);
-      console.log("🔵 updatePropositions called successfully");
-
-      // Wait for the proposition update
-      const prop = await propositionPromise;
-      if (prop) {
-        console.log("🔵 Setting proposition from callback:", JSON.stringify(prop, null, 2));
-        setProposition(prop);
-      } else {
-        console.log("🔵 No proposition received in callback");
+      console.log("🔵 Step 1: Calling updatePropositions to fetch and cache offers...");
+      
+      // Check if we can make network requests
+      console.log("🔵 Checking SDK configuration for network requests...");
+      console.log("🔵 - Module initialized:", isModuleInitialized);
+      console.log("🔵 - ECID available:", !!ecid);
+      console.log("🔵 - Scope valid:", !!scope);
+      console.log("🔵 - XDM payload:", Object.fromEntries(xdm));
+      
+      // Call updatePropositions - the onPropositionUpdate listener will handle the response
+      try {
+        await Optimize.updatePropositions([scope], xdm);
+        console.log("🔵 ✅ updatePropositions called successfully");
+      } catch (updateError) {
+        console.error("🔴 Error in updatePropositions call:", updateError);
+        Alert.alert("Error", "Failed to call updatePropositions");
+        return;
       }
 
-      Alert.alert("Success", "Proposition update request sent.");
+      // Add a timeout to check if the listener fires after a delay
+      setTimeout(() => {
+        console.log("🔵 ⏰ 5 seconds passed - checking if listener fired...");
+        if (proposition) {
+          console.log("🔵 ✅ Listener worked - proposition state was updated");
+        } else {
+          console.log("🔴 ❌ Listener did not fire - no proposition received");
+          console.log("🔴 This suggests the request may have failed or the response wasn't processed");
+        }
+      }, 5000);
+
+      Alert.alert("Success", "Proposition update request sent. Check console for response.");
     } catch (err) {
       console.error("🔴 Error in updatePropositions:", err);
       Alert.alert("Error", "Failed to update propositions.");
     }
   };
+
 
   /**
    * 4️⃣  Read propositions from local SDK cache.
@@ -153,14 +284,63 @@ export default function OptimizeView() {
     const scope = getDecisionScope();
     if (!scope) return;
 
+    console.log("🔵 Step 2: Calling getPropositions to read from cache...");
+
+    console.log("🔵 Getting cached propositions with scope:", {
+      name: scope.getName(),
+      isBase64: scope.getName().match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+      length: scope.getName().length,
+      instance: scope === currentScope ? "Same instance" : "Different instance",
+      input: decisionScopeInput
+    });
+
     const props = await Optimize.getPropositions([scope]);
-    console.log("Cached props:", props);
+    const allKeys = Array.from(props.keys());
+    console.log("🔵 Cached propositions details:", {
+      availableScopes: allKeys,
+      requestedScope: {
+        name: scope.getName(),
+        isBase64: scope.getName().match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+        length: scope.getName().length,
+        instance: scope === currentScope ? "Same instance" : "Different instance"
+      },
+      hasRequestedScope: props.has(scope.getName()),
+      scopeComparison: allKeys.map(key => ({
+        received: key,
+        requested: scope.getName(),
+        match: key === scope.getName(),
+        receivedIsBase64: key.match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+        requestedIsBase64: scope.getName().match(/^[A-Za-z0-9+/=]+$/) ? true : false,
+        receivedLength: key.length,
+        requestedLength: scope.getName().length
+      })),
+      rawProps: JSON.stringify(Object.fromEntries(props), null, 2)
+    });
+
     const prop = props.get(scope.getName());
     if (prop) {
+      console.log("🔵 Step 3: Found proposition, setting state...");
       setProposition(prop);
-      Alert.alert("Success", "Got proposition from cache.");
+      
+      // Call offer.displayed() to track that the offer was shown (Adobe best practice)
+      try {
+        if (prop.items && prop.items.length > 0) {
+          const item = prop.items[0];
+          console.log("🔵 Calling offer.displayed() for item:", item.id);
+          item.displayed(prop);
+          console.log("🔵 ✅ offer.displayed() called successfully");
+        }
+      } catch (displayError) {
+        console.error("🔴 Error calling offer.displayed():", displayError);
+      }
+      
+      console.log("🔵 ✅ Proposition set successfully and offer.displayed() called.");
+      
+      Alert.alert("Success", "Got proposition from cache successfully.");
     } else {
-      Alert.alert("Info", "No proposition found in cache.");
+      console.log("🔴 No proposition found in cache for scope:", scope.getName());
+      console.log("🔴 Make sure to call 'Update Propositions' first to fetch offers from Adobe");
+      Alert.alert("Info", "No proposition found in cache. Call 'Update Propositions' first.");
     }
   };
 
@@ -172,6 +352,21 @@ export default function OptimizeView() {
     Optimize.clearCachedPropositions();
     setProposition(null);
     Alert.alert("Cleared", "Proposition cache cleared.");
+  };
+
+  /**
+   * Clear saved decision scope from AsyncStorage.
+   */
+  const clearSavedScope = async () => {
+    try {
+      await AsyncStorage.removeItem(DECISION_SCOPE_KEY);
+      setDecisionScopeInput('');
+      console.log("🔵 Cleared saved decision scope from AsyncStorage");
+      Alert.alert("Cleared", "Saved decision scope cleared.");
+    } catch (error) {
+      console.error("🔴 Error clearing saved decision scope:", error);
+      Alert.alert("Error", "Failed to clear saved decision scope.");
+    }
   };
 
   const renderPropositionContent = (proposition: Proposition) => {
@@ -221,6 +416,14 @@ export default function OptimizeView() {
 
       <ThemedText>SDK Version: {version}</ThemedText>
 
+      <View style={{ marginVertical: 10, backgroundColor: tintColor + '10', padding: 10, borderRadius: 5 }}>
+        <ThemedText style={{ fontWeight: 'bold', marginBottom: 5 }}>Instructions:</ThemedText>
+        <ThemedText style={{ fontSize: 12 }}>1. Enter your decision scope</ThemedText>
+        <ThemedText style={{ fontSize: 12 }}>2. Click "Update Propositions" to request from Adobe</ThemedText>
+        <ThemedText style={{ fontSize: 12 }}>3. Wait for the response (check console logs)</ThemedText>
+        <ThemedText style={{ fontSize: 12 }}>4. Use "Get Cached Propositions" to verify cache</ThemedText>
+      </View>
+
       <View style={{ marginVertical: 10 }}>
         <ThemedText style={{ marginBottom: 5 }}>Decision Scope:</ThemedText>
         <TextInput
@@ -234,7 +437,10 @@ export default function OptimizeView() {
             backgroundColor: backgroundColor
           }}
           value={decisionScopeInput}
-          onChangeText={setDecisionScopeInput}
+          onChangeText={(text) => {
+            setDecisionScopeInput(text);
+            saveDecisionScope(text);
+          }}
           placeholder="Enter your decision scope"
           placeholderTextColor={textColor + '80'}
           multiline
@@ -280,6 +486,20 @@ export default function OptimizeView() {
           onPress={clearCache}
         >
           <ThemedText style={{ color: backgroundColor }}>Clear Proposition Cache</ThemedText>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ marginVertical: 10 }}>
+        <TouchableOpacity 
+          style={{ 
+            backgroundColor: tintColor, 
+            padding: 10, 
+            borderRadius: 5,
+            alignItems: 'center'
+          }}
+          onPress={clearSavedScope}
+        >
+          <ThemedText style={{ color: backgroundColor }}>Clear Saved Decision Scope</ThemedText>
         </TouchableOpacity>
       </View>
 

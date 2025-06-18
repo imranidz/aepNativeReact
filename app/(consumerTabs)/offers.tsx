@@ -11,7 +11,7 @@ import { Identity, IdentityMap, AuthenticatedState } from '@adobe/react-native-a
 import { useCart } from '../../components/CartContext';
 
 const PROFILE_KEY = 'userProfile';
-const DECISION_SCOPE_KEY = 'decisionScope';
+const DECISION_SCOPE_KEY = 'optimize_decision_scope';
 
 export function useProfileStorage() {
   const [profile, setProfile] = useState({ firstName: '', email: '' });
@@ -69,8 +69,8 @@ interface Offer {
   image: string;
   price: number;
   name: string; // Add name property
-  category?: string; // Optional category property
-  sku?: string; // Optional SKU property
+  category: string; // Make category required
+  sku: string; // Make sku required to match CartItem
 }
 
 const OfferCard = ({ offer, styles, colors, addToCart }: { offer: Offer, styles: any, colors: any, addToCart: (offer: Offer) => void }) => {
@@ -183,12 +183,13 @@ export default function OffersTab() {
               parsedContent = {};
             }
             return {
-              title: parsedContent.title || 'No Title',
+              title: parsedContent.name || parsedContent.title || 'No Title',
               text: parsedContent.text || 'No Text',
               image: parsedContent.image || '',
               price: parsedContent.price || 0,
-              name: parsedContent.title || 'Unnamed Offer',
+              name: parsedContent.name || 'Unnamed Offer',
               category: parsedContent.category || 'defaultCategory',
+              sku: parsedContent.sku || 'defaultSku',
             };
           }) || [];
           setOffers(updatedOffers);
@@ -230,11 +231,14 @@ export default function OffersTab() {
   const getPropositions = async () => {
     console.log('Get Propositions called');
     if (!decisionScope) {
-      console.error('Error: No decision scope entered');
+      console.error('Error: No decision scope found in AsyncStorage');
+      console.log('Available decision scope:', decisionScope);
       return;
     }
+    
+    console.log('Using decision scope from AsyncStorage:', decisionScope);
     const userScope = new DecisionScope(decisionScope);
-    console.log('Using decision scope:', userScope.getName());
+    console.log('Created DecisionScope with name:', userScope.getName());
 
     // Log the ECID or full identity map
     console.log('Fetching identity map...');
@@ -262,34 +266,52 @@ export default function OffersTab() {
     const xdmData = { "xdm": { "identityMap": { "ECID": { "id": ecid, "primary": true } } } };
 
     // Adjust the getPropositions call
-    console.log('Fetching propositions...');
+    console.log('Fetching propositions from cache...');
     try {
       const propositions: Map<string, Proposition> =
         await Optimize.getPropositions([userScope]);
       console.log('Propositions response received:', propositions);
-      if (propositions) {
-        const mappedOffers = propositions.get(userScope.getName())?.items.map(item => {
-          const characteristics = item.data.characteristics || {};
-          let parsedContent;
-          try {
-            parsedContent = JSON.parse(item.data.content);
-            console.log('Parsed Content:', parsedContent); // Log parsed content
-          } catch (e) {
-            console.error('Error parsing content:', e);
-            parsedContent = {};
-          }
-          return {
-            title: parsedContent.name || 'No name',
-            text: parsedContent.text || 'No Text',
-            image: parsedContent.image || '',
-            price: parsedContent.price || 0,
-          };
-        }) || [];
-        setOffers(mappedOffers);
-        console.log('Mapped offers:', mappedOffers);
+      
+      if (propositions && propositions.size > 0) {
+        const scopeName = userScope.getName();
+        const proposition = propositions.get(scopeName);
+        
+        if (proposition && proposition.items && proposition.items.length > 0) {
+          console.log('Found proposition with items:', proposition.items.length);
+          const mappedOffers = proposition.items.map(item => {
+            const characteristics = item.data.characteristics || {};
+            let parsedContent;
+            try {
+              parsedContent = JSON.parse(item.data.content);
+              console.log('Parsed Content:', parsedContent); // Log parsed content
+            } catch (e) {
+              console.error('Error parsing content:', e);
+              parsedContent = {};
+            }
+            return {
+              title: parsedContent.name || parsedContent.title || 'No Title',
+              text: parsedContent.text || 'No Text',
+              image: parsedContent.image || '',
+              price: parsedContent.price || 0,
+              name: parsedContent.name || 'Unnamed Offer',
+              category: parsedContent.category || 'defaultCategory',
+              sku: parsedContent.sku || 'defaultSku',
+            };
+          });
+          setOffers(mappedOffers);
+          console.log('Mapped offers:', mappedOffers);
+        } else {
+          console.log('No items found in proposition');
+          setOffers([]);
+        }
+      } else {
+        console.log('No propositions found in cache');
+        console.log('Available scopes in cache:', Array.from(propositions.keys()));
+        setOffers([]);
       }
     } catch (error) {
       console.error('Error fetching propositions:', error);
+      setOffers([]);
     }
   };
 

@@ -3,7 +3,7 @@
  * 1. Set log level to DEBUG
  * 2. Initialize MobileCore with App ID
  * 3. Wait 1 second for initialization to complete
- * 4. Verify Assurance extension is ready
+ * 4. Verify all extensions are ready
  * 
  * IMPORTANT: Do not modify this sequence as it ensures proper initialization order
  * and prevents race conditions between MobileCore and extensions.
@@ -13,6 +13,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeModules } from 'react-native';
 import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
 import { Assurance } from '@adobe/react-native-aepassurance';
+import { Edge } from '@adobe/react-native-aepedge';
+import { Identity } from '@adobe/react-native-aepedgeidentity';
+import { Optimize } from '@adobe/react-native-aepoptimize';
+import { Consent } from '@adobe/react-native-aepedgeconsent';
+import { Messaging } from '@adobe/react-native-aepmessaging';
+import { Places } from '@adobe/react-native-aepplaces';
+import { Target } from '@adobe/react-native-aeptarget';
+import { UserProfile } from '@adobe/react-native-aepuserprofile';
 
 const { AppIdModule } = NativeModules;
 
@@ -70,12 +78,40 @@ export const configureAdobe = async (appId: string) => {
     // Wait a moment for initialization to complete
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Verify Assurance is ready
+    // Verify all extensions are ready
     try {
-      const version = await Assurance.extensionVersion();
-      console.log('Assurance version after initialization:', version);
+      console.log('Verifying all Adobe extensions are ready...');
+      
+      const assuranceVersion = await Assurance.extensionVersion();
+      console.log('Assurance version:', assuranceVersion);
+      
+      const edgeVersion = await Edge.extensionVersion();
+      console.log('Edge version:', edgeVersion);
+      
+      const identityVersion = await Identity.extensionVersion();
+      console.log('Edge Identity version:', identityVersion);
+      
+      const optimizeVersion = await Optimize.extensionVersion();
+      console.log('Optimize version:', optimizeVersion);
+      
+      const consentVersion = await Consent.extensionVersion();
+      console.log('Edge Consent version:', consentVersion);
+      
+      const messagingVersion = await Messaging.extensionVersion();
+      console.log('Messaging version:', messagingVersion);
+      
+      const placesVersion = await Places.extensionVersion();
+      console.log('Places version:', placesVersion);
+      
+      const targetVersion = await Target.extensionVersion();
+      console.log('Target version:', targetVersion);
+      
+      const userProfileVersion = await UserProfile.extensionVersion();
+      console.log('User Profile version:', userProfileVersion);
+      
+      console.log('All Adobe extensions verified and ready');
     } catch (error) {
-      console.error('Error verifying Assurance:', error);
+      console.error('Error verifying Adobe extensions:', error);
     }
     
     console.log('Adobe SDK initialized successfully');
