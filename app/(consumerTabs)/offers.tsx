@@ -74,6 +74,21 @@ interface Offer {
 }
 
 const OfferCard = ({ offer, styles, colors, addToCart }: { offer: Offer, styles: any, colors: any, addToCart: (offer: Offer) => void }) => {
+  const [isAdded, setIsAdded] = React.useState(false);
+
+  const handleAddToCart = () => {
+    addToCart({
+      name: offer.title || 'Unnamed Offer',
+      title: offer.title,
+      category: offer.category || 'defaultCategory',
+      sku: offer.sku || 'defaultSku',
+      price: offer.price,
+      text: offer.text,
+      image: offer.image
+    });
+    setIsAdded(true);
+  };
+
   return (
     <View style={[styles.card, { alignItems: 'center', backgroundColor: colors.card, padding: 16, width: '100%' }]}>
       <Image
@@ -85,16 +100,21 @@ const OfferCard = ({ offer, styles, colors, addToCart }: { offer: Offer, styles:
         <ThemedText style={{ color: colors.text, fontSize: 18, fontWeight: 'bold', marginBottom: 4, textAlign: 'left' }}>{offer.title}</ThemedText>
         <ThemedText style={{ color: colors.text, fontSize: 14, textAlign: 'left' }}>{offer.text}</ThemedText>
         <ThemedText style={{ color: colors.text, fontSize: 16, fontWeight: 'bold', marginTop: 4, textAlign: 'left' }}>${offer.price.toFixed(2)}</ThemedText>
-        <TouchableOpacity onPress={() => addToCart({
-          name: offer.title || 'Unnamed Offer',
-          title: offer.title,
-          category: offer.category || 'defaultCategory',
-          sku: offer.sku || 'defaultSku',
-          price: offer.price,
-          text: offer.text,
-          image: offer.image
-        })} style={{ marginTop: 8, paddingVertical: 8, paddingHorizontal: 16, backgroundColor: colors.primary, borderRadius: 8 }}>
-          <ThemedText style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Add to Cart</ThemedText>
+        <TouchableOpacity 
+          onPress={handleAddToCart} 
+          disabled={isAdded}
+          style={{ 
+            marginTop: 8, 
+            paddingVertical: 8, 
+            paddingHorizontal: 16, 
+            backgroundColor: isAdded ? '#4CAF50' : colors.primary, 
+            borderRadius: 8,
+            opacity: isAdded ? 0.8 : 1
+          }}
+        >
+          <ThemedText style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>
+            {isAdded ? 'Added to Cart' : 'Add to Cart'}
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </View>
@@ -332,12 +352,26 @@ export default function OffersTab() {
     <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Ionicons name="gift" size={48} color="#007AFF" />
       <ThemedText style={{ fontSize: 24, marginTop: 12 }}>Offers View</ThemedText>
-      <FlatList
-        data={offers}
-        renderItem={({ item }) => <OfferCard offer={item} styles={styles} colors={colors} addToCart={addToCart} />}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={styles.list}
-      />
+      
+      {offers.length === 0 ? (
+        <View style={{ padding: 20, alignItems: 'center' }}>
+          <ThemedText style={{ fontSize: 16, color: colors.text, marginBottom: 10 }}>
+            No offers available
+          </ThemedText>
+          <Button 
+            title="Refresh Offers" 
+            onPress={getPropositions}
+            color={colors.primary}
+          />
+        </View>
+      ) : (
+        <FlatList
+          data={offers}
+          renderItem={({ item }) => <OfferCard offer={item} styles={styles} colors={colors} addToCart={addToCart} />}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.list}
+        />
+      )}
     </ThemedView>
   );
 }
