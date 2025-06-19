@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme, useNavigation } from '@react-navigation/native';
+import { useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useCart } from '../../components/CartContext';
@@ -17,6 +17,19 @@ export default function Checkout() {
   const { clearCart, cart } = useCart();
   const { profile } = useProfileStorage();
   //console.log('Profile from storage:', profile);
+
+  useFocusEffect(
+    useCallback(() => {
+      MobileCore.trackAction('pageView', {
+        'page.name': 'Checkout',
+        'page.category': 'Consumer',
+        'page.type': 'Checkout View',
+        'user.journey': 'Navigation',
+        'cart.totalValue': cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2),
+        'cart.itemCount': cart.length,
+      });
+    }, [cart])
+  );
 
   useEffect(() => {
     //console.log('Profile firstName:', profile.firstName);

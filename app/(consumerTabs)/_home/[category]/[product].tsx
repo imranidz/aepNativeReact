@@ -24,13 +24,13 @@ export const options = {
   tabBarButton: () => null,
 };
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ThemedView } from '../../../../components/ThemedView';
 import { ThemedText } from '../../../../components/ThemedText';
 import { View, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
-import { useTheme, useNavigation } from '@react-navigation/native';
+import { useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useCart } from '../../../../components/CartContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -91,6 +91,23 @@ export default function ProductDetail() {
 
   const productSku = productData?.sku;
 
+  useFocusEffect(
+    useCallback(() => {
+      if (productData) {
+        MobileCore.trackAction('pageView', {
+          'page.name': 'Product Detail',
+          'page.category': 'Consumer',
+          'page.type': 'Product View',
+          'user.journey': 'Navigation',
+          'product.name': productData.product.name,
+          'product.category': category,
+          'product.price': productData.product.price,
+          'product.sku': productSku,
+        });
+      }
+    }, [productData, category, productSku])
+  );
+
   //console.log({ category, product, productData });
 
   if (!productData) {
@@ -113,8 +130,10 @@ export default function ProductDetail() {
     addToCart({
       category: category ?? '',
       name: productData.product.name,
+      title: productData.product.name,
       price: productData.product.price,
       sku: productSku,
+      image: productData.product.image,
     });
     // Analytics tracking for add to cart
     MobileCore.trackAction('addToCart', {
@@ -145,12 +164,17 @@ export default function ProductDetail() {
       <TouchableOpacity
         style={[
           styles.addToCartButton,
-          { backgroundColor: added ? (colors.notification || '#4caf50') : colors.primary },
+          { 
+            backgroundColor: added ? '#4CAF50' : colors.primary,
+            opacity: added ? 0.8 : 1
+          },
         ]}
         onPress={handleAddToCart}
         disabled={added}
       >
-        <ThemedText style={[styles.addToCartText, { color: '#fff' }]}>{added ? 'Added!' : 'Add to Cart'}</ThemedText>
+        <ThemedText style={[styles.addToCartText, { color: '#fff' }]}>
+          {added ? 'Added to Cart' : 'Add to Cart'}
+        </ThemedText>
       </TouchableOpacity>
     </ThemedView>
   );

@@ -170,6 +170,14 @@ export default function OffersTab() {
   useEffect(() => {
     console.log('OffersTab view loaded'); // Log when the view is loaded
 
+    // Track page view analytics
+    MobileCore.trackAction('pageView', {
+      'page.name': 'Offers',
+      'page.category': 'Consumer',
+      'page.type': 'Offers View',
+      'user.journey': 'Navigation',
+    });
+
     // Ensure SDK is fully initialized
     const ensureSDKInitialized = async () => {
       console.log('Ensuring SDK is fully initialized...');

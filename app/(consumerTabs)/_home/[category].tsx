@@ -1,6 +1,13 @@
 import productsData from '../../productData/bootcamp_products.json';
 import { Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme, useFocusEffect } from '@react-navigation/native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { MobileCore } from '@adobe/react-native-aepcore';
 
 const PRODUCT_ICONS: { [key: string]: any } = {
   // Family
@@ -114,13 +121,6 @@ export const options = {
   tabBarButton: () => null,
 };
 
-import React from 'react';
-import { ThemedView } from '../../../components/ThemedView';
-import { ThemedText } from '../../../components/ThemedText';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-
 export default function CategoryProductList() {
   const { category } = useLocalSearchParams<{ category: string }>();
   const router = useRouter();
@@ -129,6 +129,20 @@ export default function CategoryProductList() {
 
   // Filter products by category
   const products = productsData.filter(product => product.product.categories.primary.toLowerCase() === category?.toLowerCase());
+
+  useFocusEffect(
+    useCallback(() => {
+      const pageName = category ? category.charAt(0).toUpperCase() + category.slice(1) + ' Category' : 'Category';
+      MobileCore.trackAction('pageView', {
+        'page.name': pageName,
+        'page.category': 'Consumer',
+        'page.type': 'Category View',
+        'user.journey': 'Navigation',
+        'category.name': category,
+        'product.count': products.length,
+      });
+    }, [category, products.length])
+  );
 
   const handleProductPress = (productName: string) => {
     const path = `/(consumerTabs)/_home/${category}/${slugify(productName)}`;
