@@ -37,6 +37,7 @@ export default function HomeScreen() {
         <Button onPress={() => navigation.navigate('(techScreens)/AssuranceView')} title="Assurance" />
         <Button onPress={() => navigation.navigate('(techScreens)/TargetView')} title="Target" />
         <Button onPress={() => navigation.navigate('(techScreens)/PlacesView')} title="Places" />
+        <Button onPress={() => navigation.navigate('(techScreens)/PushNotificationView')} title="Push Notifications" />
       </View>
     </ScrollView>
   );

@@ -22,6 +22,33 @@ import { useTheme } from '@react-navigation/native';
 
 const SURFACES = ['android-cb-preview'];
 
+// Content Card Event Listener Implementation
+// Note: Content card methods are not yet available in the current Messaging extension version
+// This structure is prepared for when content card functionality becomes available
+const contentCardEventListener = {
+  onDisplay: (aepUI: any) => {
+    console.log('ContentCardCallback: onDisplay', aepUI);
+  },
+  
+  onDismiss: (aepUI: any) => {
+    console.log('ContentCardCallback: onDismiss', aepUI);
+  },
+  
+  onInteract: (aepUI: any, interactionId: string | null, actionUrl: string | null): boolean => {
+    console.log('ContentCardCallback: onInteract', { interactionId, actionUrl });
+    
+    // Handle actionable URLs
+    if (actionUrl) {
+      console.log('Handling action URL:', actionUrl);
+      // Add your custom URL handling logic here
+      // For example: open URL in browser, navigate to specific screen, etc.
+      return true; // Return true if you handled the URL
+    }
+    
+    return false; // Return false to let SDK handle the URL
+  }
+};
+
 const messagingExtensionVersion = async (setLog: (msg: string) => void) => {
   const version = await Messaging.extensionVersion();
   const msg = `AdobeExperienceSDK: Messaging version: ${version}`;
@@ -69,6 +96,24 @@ const getLatestMessage = async () => {
   console.log('Latest Message:', message);
 };
 
+// Content Card Functions (Not yet available in current version)
+const setContentCardEventListener = () => {
+  console.log('Content card event listener functionality not yet available in current Messaging extension version');
+  console.log('Event listener structure prepared:', contentCardEventListener);
+};
+
+const getContentCards = async () => {
+  console.log('getContentCards() not yet available in current Messaging extension version');
+};
+
+const refreshContentCards = async () => {
+  console.log('refreshContentCards() not yet available in current Messaging extension version');
+};
+
+const getContentCardUI = async () => {
+  console.log('getContentCardUI() not yet available in current Messaging extension version');
+};
+
 function MessagingView() {
   const router = useRouter();
   const [log, setLog] = useState('');
@@ -79,6 +124,11 @@ function MessagingView() {
       <ScrollView contentContainerStyle={{marginTop: 75}}>
         <Button onPress={router.back} title="Go to main page" />
         <ThemedText style={styles.welcome}>Messaging</ThemedText>
+        
+        {/* Existing Messaging Functions */}
+        <ThemedText style={{ marginTop: 16, color: theme.colors.text, fontSize: 16, fontWeight: 'bold' }}>
+          Core Messaging Functions
+        </ThemedText>
         <Button title="extensionVersion()" onPress={() => messagingExtensionVersion(setLog)} />
         <Button title="refreshInAppMessages()" onPress={refreshInAppMessages} />
         <Button title="setMessagingDelegate()" onPress={setMessagingDelegate} />
@@ -93,6 +143,16 @@ function MessagingView() {
         <Button title="getCachedMessages()" onPress={getCachedMessages} />
         <Button title="getLatestMessage()" onPress={getLatestMessage} />
         <Button title="trackAction()" onPress={trackAction} />
+        
+        {/* Content Card Functions */}
+        <ThemedText style={{ marginTop: 24, color: theme.colors.text, fontSize: 16, fontWeight: 'bold' }}>
+          Content Card Functions
+        </ThemedText>
+        <Button title="setContentCardEventListener()" onPress={setContentCardEventListener} />
+        <Button title="getContentCards()" onPress={getContentCards} />
+        <Button title="refreshContentCards()" onPress={refreshContentCards} />
+        <Button title="getContentCardUI()" onPress={getContentCardUI} />
+        
         {log ? (
           <ThemedText style={{ marginTop: 24, color: theme.colors.text, fontSize: 16, textAlign: 'center' }}>{log}</ThemedText>
         ) : null}

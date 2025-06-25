@@ -10,7 +10,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NativeModules } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 import { MobileCore, LogLevel } from '@adobe/react-native-aepcore';
 import { Assurance } from '@adobe/react-native-aepassurance';
 import { Edge } from '@adobe/react-native-aepedge';
@@ -74,6 +74,23 @@ export const configureAdobe = async (appId: string) => {
     // Initialize with App ID
     console.log('Initializing MobileCore with App ID:', appId);
     await MobileCore.initializeWithAppId(appId);
+    
+    // Apply Messaging configuration
+    try {
+      const messagingConfig: any = {
+        'messaging.eventDataset': '6838c051f861982aef2661be'
+      };
+
+      if (Platform.OS === 'ios') {
+        messagingConfig['messaging.useSandbox'] = true;
+      }
+
+      console.log('Applying Messaging configuration:', messagingConfig);
+      await MobileCore.updateConfiguration(messagingConfig);
+      console.log('Messaging configuration applied successfully');
+    } catch (error) {
+      console.error('Error applying Messaging configuration:', error);
+    }
     
     // Wait a moment for initialization to complete
     await new Promise(resolve => setTimeout(resolve, 1000));
