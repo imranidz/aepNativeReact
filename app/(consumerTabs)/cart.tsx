@@ -6,7 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect, useTheme, useNavigation } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useCart } from '../../components/CartContext';
-import { PRODUCT_IMAGES } from './_home/[category]';
+import { PRODUCT_IMAGES } from './shop/_home/[category]';
 import { Identity } from '@adobe/react-native-aepedgeidentity';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './_layout';

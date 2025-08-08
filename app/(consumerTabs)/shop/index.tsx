@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { ThemedView } from '../../components/ThemedView';
-import { ThemedText } from '../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 import { View, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useFocusEffect, useTheme, useNavigationState } from '@react-navigation/native';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import productsData from '../productData/bootcamp_products.json';
+import productsData from '../../productData/bootcamp_products.json';
 
 // Extract unique categories from the JSON data
 const CATEGORIES: { key: string; label: string; description: string }[] = Array.from(new Set(productsData.map(product => product.product.categories.primary))).map(category => ({
@@ -16,9 +16,9 @@ const CATEGORIES: { key: string; label: string; description: string }[] = Array.
 }));
 
 const CATEGORY_IMAGES: { [key: string]: any } = {
-  men: require('../../assets/images/productImages/mtnman.jpeg'),
-  women: require('../../assets/images/productImages/mtnwomen.jpeg'),
-  equipment: require('../../assets/images/productImages/mtnequipment.jpeg'),
+  men: require('../../../assets/images/productImages/mtnman.jpeg'),
+  women: require('../../../assets/images/productImages/mtnwomen.jpeg'),
+  equipment: require('../../../assets/images/productImages/mtnequipment.jpeg'),
 };
 
 const CATEGORY_ICONS: { [key: string]: string } = {
@@ -40,17 +40,23 @@ export default function ShopTab() {
 
   useFocusEffect(
     useCallback(() => {
+      console.log('ShopTab: Focus effect triggered, navigation state:', {
+        routes: navigationState.routes.map(r => r.name),
+        index: navigationState.index,
+        previousRouteName
+      });
+      
       MobileCore.trackState('ShopTab', {
         'view.name': 'Shop',
         'navigation.previousView': previousRouteName,
         'application.name': 'WeRetailMobileApp',
         'timestamp': new Date().toISOString(),
       });
-    }, [previousRouteName])
+    }, [previousRouteName, navigationState.routes, navigationState.index])
   );
 
   const handleCategoryPress = (categoryKey: string) => {
-    const path = `/(consumerTabs)/_home/${categoryKey}`;
+    const path = `/(consumerTabs)/shop/_home/${categoryKey}`;
     console.log('ShopTab: Navigating to:', path);
     router.push(path as any);
   };

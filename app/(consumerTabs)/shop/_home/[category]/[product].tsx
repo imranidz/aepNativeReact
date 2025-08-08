@@ -1,4 +1,4 @@
-import productsData from '../../../productData/bootcamp_products.json';
+import productsData from '../../../../productData/bootcamp_products.json';
 import { PRODUCT_IMAGES } from '../[category]';
 
 // Define a type for the product data
@@ -25,13 +25,13 @@ export const options = {
 };
 
 import React, { useState, useCallback } from 'react';
-import { ThemedView } from '../../../../components/ThemedView';
-import { ThemedText } from '../../../../components/ThemedText';
+import { ThemedView } from '../../../../../components/ThemedView';
+import { ThemedText } from '../../../../../components/ThemedText';
 import { View, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
-import { useCart } from '../../../../components/CartContext';
+import { useCart } from '../../../../../components/CartContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const PRODUCT_ICONS: { [key: string]: any } = {
@@ -93,6 +93,12 @@ export default function ProductDetail() {
 
   useFocusEffect(
     useCallback(() => {
+      console.log('ProductDetail: Focus effect triggered for product:', {
+        product: product,
+        category: category,
+        productName: productData?.product.name
+      });
+      
       if (productData) {
         MobileCore.trackAction('pageView', {
           'page.name': 'Product Detail',
@@ -105,7 +111,7 @@ export default function ProductDetail() {
           'product.sku': productSku,
         });
       }
-    }, [productData, category, productSku])
+    }, [productData, category, productSku, product])
   );
 
   //console.log({ category, product, productData });
@@ -221,4 +227,4 @@ const styles = StyleSheet.create({
   },
   added: {
   },
-}); 
+});
