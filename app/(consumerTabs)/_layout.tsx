@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { CartTabBarIcon } from '../../components/navigation/TabBarIcon';
 
 // Define your navigation types
 export type RootStackParamList = {
@@ -40,7 +41,7 @@ export default function ConsumerTabsLayout() {
         options={{
           title: 'Cart',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart" color={color} size={size} />
+            <CartTabBarIcon color={color} size={size} />
           ),
         }}
       />
