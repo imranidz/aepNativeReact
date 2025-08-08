@@ -3,14 +3,19 @@ import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { MobileCore } from '@adobe/react-native-aepcore';
 import { useCart } from '../../components/CartContext';
 import { useProfileStorage } from '../../hooks/useProfileStorage';
 
+type RootStackParamList = {
+  home: undefined;
+};
+
 export default function Checkout() {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [showConfetti, setShowConfetti] = React.useState(false);
   const [firstName, setFirstName] = useState('');
   const [email, setEmail] = useState('');
