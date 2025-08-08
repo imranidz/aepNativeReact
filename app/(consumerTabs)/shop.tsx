@@ -32,7 +32,7 @@ const CATEGORY_ICONS: { [key: string]: string } = {
   mountain: 'trail-sign',
 };
 
-export default function HomeTab() {
+export default function ShopTab() {
   const router = useRouter();
   const { colors } = useTheme();
   const navigationState = useNavigationState(state => state);
@@ -40,8 +40,8 @@ export default function HomeTab() {
 
   useFocusEffect(
     useCallback(() => {
-      MobileCore.trackState('HomeTab', {
-        'view.name': 'Home',
+      MobileCore.trackState('ShopTab', {
+        'view.name': 'Shop',
         'navigation.previousView': previousRouteName,
         'application.name': 'WeRetailMobileApp',
         'timestamp': new Date().toISOString(),
@@ -51,7 +51,7 @@ export default function HomeTab() {
 
   const handleCategoryPress = (categoryKey: string) => {
     const path = `/(consumerTabs)/_home/${categoryKey}`;
-    console.log('HomeTab: Navigating to:', path);
+    console.log('ShopTab: Navigating to:', path);
     router.push(path as any);
   };
 

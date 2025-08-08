@@ -6,7 +6,7 @@ import { CartTabBarIcon } from '../../components/navigation/TabBarIcon';
 
 // Define your navigation types
 export type RootStackParamList = {
-  home: undefined;
+  shop: undefined;
   offers: undefined;
   cart: undefined;
   profile: undefined;
@@ -19,9 +19,9 @@ export default function ConsumerTabsLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="home"
+        name="shop"
         options={{
-          title: 'Home',
+          title: 'Shop',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
