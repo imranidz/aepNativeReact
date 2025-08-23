@@ -214,6 +214,7 @@ export default function OptimizeView() {
         return;
       }
 
+      console.log("🔵 Decision scope input:", decisionScopeInput);
       const scope = getDecisionScope();
       if (!scope) return;
 

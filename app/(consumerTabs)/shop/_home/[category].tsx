@@ -225,3 +225,4 @@ const styles = StyleSheet.create({
 });
 
 export { PRODUCT_IMAGES };
+

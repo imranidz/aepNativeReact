@@ -32,6 +32,7 @@ import {
   Alert,
 } from 'react-native';
 import {Assurance} from '@adobe/react-native-aepassurance';
+import {MobileCore} from '@adobe/react-native-aepcore';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
@@ -44,12 +45,47 @@ const AssuranceView = () => {
   const [version, setVersion] = useState('');
   const [sessionURL, setSessionURL] = useState('');
   const [isSessionActive, setIsSessionActive] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('Checking...');
+  const [lastValidationTime, setLastValidationTime] = useState<Date | null>(null);
 
   const router = useRouter();
   const theme = useTheme();
 
+  // Enhanced session validation function
+  const validateSession = async (): Promise<boolean> => {
+    try {
+      // Check if extension is still available
+      const currentVersion = await Assurance.extensionVersion();
+      if (!currentVersion) {
+        setConnectionStatus('Extension not available');
+        return false;
+      }
+
+      // Test the session by sending a test event (this will appear in Assurance if connected)
+      const testEventData = {
+        validation: true,
+        appVersion: version,
+        sessionURL: sessionURL,
+        timestamp: Date.now(),
+      };
+
+      // Dispatch test event using MobileCore.trackAction (which works better with Assurance)
+      await MobileCore.trackAction('assurance.session.validation', testEventData);
+      
+      setConnectionStatus('Connected - Test event sent');
+      setLastValidationTime(new Date());
+      return true;
+    } catch (error) {
+      console.error('Session validation failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setConnectionStatus(`Validation failed: ${errorMessage}`);
+      return false;
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
+    let healthCheckInterval: NodeJS.Timeout | null = null;
     
     // Load saved session URL and initialize
     const initializeAssurance = async () => {
@@ -72,10 +108,29 @@ const AssuranceView = () => {
             const newVersion = await Assurance.extensionVersion();
             console.log('Assurance version after reconnect:', newVersion);
             setIsSessionActive(true);
+            
+            // Validate the reconnected session
+            await validateSession();
+            
+            // Set up periodic health checks (every 30 seconds)
+            healthCheckInterval = setInterval(async () => {
+              if (isMounted) {
+                const isValid = await validateSession();
+                if (!isValid) {
+                  setIsSessionActive(false);
+                  if (healthCheckInterval) {
+                    clearInterval(healthCheckInterval);
+                  }
+                }
+              }
+            }, 30000);
           } catch (error) {
             console.error('Error reconnecting to session:', error);
             setIsSessionActive(false);
+            setConnectionStatus('Failed to reconnect');
           }
+        } else if (isMounted) {
+          setConnectionStatus('No saved session');
         }
       } catch (error) {
         console.error('Error during Assurance initialization:', error);
@@ -84,7 +139,12 @@ const AssuranceView = () => {
 
     initializeAssurance();
 
-    return () => { isMounted = false; };
+    return () => { 
+      isMounted = false;
+      if (healthCheckInterval) {
+        clearInterval(healthCheckInterval);
+      }
+    };
   }, []);
 
   const startSessionClicked = async () => {
@@ -93,6 +153,8 @@ const AssuranceView = () => {
         Alert.alert('Error', 'Please enter a valid Assurance session URL');
         return;
       }
+
+      setConnectionStatus('Starting session...');
 
       // Save the session URL
       await AsyncStorage.setItem(ASSURANCE_URL_KEY, sessionURL.trim());
@@ -106,11 +168,40 @@ const AssuranceView = () => {
       console.log('Assurance version after session start:', version);
       
       setIsSessionActive(true);
-      Alert.alert('Success', 'Assurance session started successfully');
+      
+      // Validate the new session
+      const isValid = await validateSession();
+      if (isValid) {
+        Alert.alert('Success', 'Assurance session started and validated successfully');
+        
+        // Set up periodic health checks (every 30 seconds)
+        const healthCheckInterval = setInterval(async () => {
+          const isStillValid = await validateSession();
+          if (!isStillValid) {
+            setIsSessionActive(false);
+            clearInterval(healthCheckInterval);
+          }
+        }, 30000);
+      } else {
+        Alert.alert('Warning', 'Session started but validation failed');
+      }
     } catch (error) {
       console.error('Error starting Assurance session:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setConnectionStatus(`Start failed: ${errorMessage}`);
       Alert.alert('Error', 'Failed to start Assurance session');
+      setIsSessionActive(false);
     }
+  };
+
+  const testConnection = async () => {
+    const isValid = await validateSession();
+    Alert.alert(
+      'Connection Test',
+      isValid 
+        ? 'Connection is working! Check the Assurance web interface for the test event.' 
+        : 'Connection validation failed. Check console logs for details.'
+    );
   };
 
   return (
@@ -120,8 +211,18 @@ const AssuranceView = () => {
         <ThemedText style={styles.welcome}>Assurance v{version}</ThemedText>
         
         <ThemedText style={styles.status}>
-          Session Status: {isSessionActive ? 'Active' : 'Inactive'}
+          Session Status: {isSessionActive ? '🟢 Active' : '🔴 Inactive'}
         </ThemedText>
+
+        <ThemedText style={[styles.status, {fontSize: 14, color: theme.colors.text}]}>
+          Connection: {connectionStatus}
+        </ThemedText>
+
+        {lastValidationTime && (
+          <ThemedText style={[styles.status, {fontSize: 12, color: theme.colors.text}]}>
+            Last validated: {lastValidationTime.toLocaleTimeString()}
+          </ThemedText>
+        )}
 
         <TextInput
           style={{
@@ -144,6 +245,14 @@ const AssuranceView = () => {
           onPress={startSessionClicked}
           disabled={!sessionURL.trim()}
         />
+
+        {isSessionActive && (
+          <Button 
+            title="Test Connection" 
+            onPress={testConnection}
+            color="#4CAF50"
+          />
+        )}
       </ScrollView>
     </ThemedView>
   );
