@@ -8,6 +8,7 @@ import { CartTabBarIcon } from '../../components/navigation/TabBarIcon';
 export type RootStackParamList = {
   shop: undefined;
   offers: undefined;
+  edgeOffers: undefined;
   cart: undefined;
   profile: undefined;
   Checkout: undefined; // Ensure this matches your route name
@@ -33,6 +34,15 @@ export default function ConsumerTabsLayout() {
           title: 'Offers',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="gift" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="edgeOffers"
+        options={{
+          title: 'Edge Offers',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="diamond" color={color} size={size} />
           ),
         }}
       />
