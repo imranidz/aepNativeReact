@@ -59,6 +59,7 @@ export default function DecisioningItemsTab() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isFromCache, setIsFromCache] = useState(false);
 
   // Load configuration and fetch items when tab becomes focused
   useFocusEffect(
@@ -129,52 +130,90 @@ export default function DecisioningItemsTab() {
     }
   };
 
-  const fetchDecisioningItems = async (configuration: DecisioningItemsConfig) => {
+  // Get cached decisioning items (similar to offers tab pattern)
+  const getCachedDecisioningItems = async (configuration: DecisioningItemsConfig) => {
     try {
-      console.log('🔵 DecisioningItems: Starting fetchDecisioningItems with surface:', configuration.surface);
-
-      // Use surface exactly as configured
+      console.log('🔵 DecisioningItems: Getting cached items for surface:', configuration.surface);
+      
       const surface = configuration.surface;
-      console.log('🔵 DecisioningItems: Using surface:', surface);
-      console.log('🟡 SURFACE DEBUG - About to call Messaging SDK with surface:', surface);
-      console.log('🟡 SURFACE DEBUG - Surface array to be passed:', [surface]);
-      console.log('🟡 SURFACE DEBUG - JSON.stringify surface array:', JSON.stringify([surface]));
-
-      // Fetch propositions from server and cache
-      console.log('🔵 DecisioningItems: Calling updatePropositionsForSurfaces...');
-      await Messaging.updatePropositionsForSurfaces([surface]);
-
-      // Retrieve cached propositions
+      
+      // Try to get cached propositions first (like offers tab)
       console.log('🔵 DecisioningItems: Retrieving cached propositions...');
       const propositionsResult = await Messaging.getPropositionsForSurfaces([surface]);
       
-      console.log('🟡 SURFACE DEBUG - Raw propositions result:', propositionsResult);
-      console.log('🟡 SURFACE DEBUG - Propositions result type:', typeof propositionsResult);
+      console.log('🟡 CACHE DEBUG - Raw propositions result:', propositionsResult);
+      console.log('🟡 CACHE DEBUG - Propositions result type:', typeof propositionsResult);
       
       // Convert propositions result to array if needed
       let propositionsArray: any[] = [];
       if (Array.isArray(propositionsResult)) {
         propositionsArray = propositionsResult;
       } else if (propositionsResult && typeof propositionsResult === 'object') {
-        // Handle case where result is a dictionary/record
-        console.log('🟡 SURFACE DEBUG - Propositions object keys:', Object.keys(propositionsResult));
+        console.log('🟡 CACHE DEBUG - Propositions object keys:', Object.keys(propositionsResult));
         propositionsArray = Object.values(propositionsResult).flat();
       }
       
-      console.log('🔵 DecisioningItems: Processed propositions:', propositionsArray.length);
-      console.log('🟡 SURFACE DEBUG - Final propositions array:', propositionsArray);
+      console.log('🔵 DecisioningItems: Found cached propositions:', propositionsArray.length);
 
-      // Process propositions into items
-      const extractedItems = processPropositions(propositionsArray);
-      console.log('🔵 DecisioningItems: Extracted items count:', extractedItems.length);
+      if (propositionsArray.length > 0) {
+        // Process cached propositions into items
+        const extractedItems = processPropositions(propositionsArray);
+        console.log('🔵 DecisioningItems: Extracted cached items count:', extractedItems.length);
 
-      setItems(extractedItems);
-      setLastUpdated(new Date());
-      
-      console.log('🔵 DecisioningItems: ✅ Successfully updated items');
+        setItems(extractedItems);
+        setLastUpdated(new Date());
+        setIsFromCache(true);
+        
+        console.log('🔵 DecisioningItems: ✅ Successfully loaded cached items');
+        return extractedItems;
+      } else {
+        console.log('🔵 DecisioningItems: No cached items found, will need to fetch from server');
+        return [];
+      }
       
     } catch (error: any) {
-      console.error('🔴 DecisioningItems: Error fetching items:', error);
+      console.error('🔴 DecisioningItems: Error getting cached items:', error);
+      return [];
+    }
+  };
+
+  // Fetch decisioning items from server and cache (like updatePropositions in offers)
+  const fetchDecisioningItemsFromServer = async (configuration: DecisioningItemsConfig) => {
+    try {
+      console.log('🔵 DecisioningItems: Fetching from server for surface:', configuration.surface);
+
+      const surface = configuration.surface;
+      console.log('🟡 SERVER DEBUG - About to call updatePropositionsForSurfaces with surface:', surface);
+
+      // Fetch propositions from server and cache them
+      console.log('🔵 DecisioningItems: Calling updatePropositionsForSurfaces...');
+      await Messaging.updatePropositionsForSurfaces([surface]);
+      
+      // Now get the newly cached propositions (but don't mark as "from cache" since we just fetched)
+      const propositionsResult = await Messaging.getPropositionsForSurfaces([surface]);
+      
+      let propositionsArray: any[] = [];
+      if (Array.isArray(propositionsResult)) {
+        propositionsArray = propositionsResult;
+      } else if (propositionsResult && typeof propositionsResult === 'object') {
+        propositionsArray = Object.values(propositionsResult).flat();
+      }
+      
+      let extractedItems: DecisioningItem[] = [];
+      if (propositionsArray.length > 0) {
+        extractedItems = processPropositions(propositionsArray);
+        setItems(extractedItems);
+        setLastUpdated(new Date());
+      }
+      
+      // Mark as freshly fetched (not from cache)
+      setIsFromCache(false);
+      
+      console.log('🔵 DecisioningItems: ✅ Successfully fetched and cached items from server');
+      return extractedItems;
+      
+    } catch (error: any) {
+      console.error('🔴 DecisioningItems: Error fetching from server:', error);
       
       // Handle specific error types
       if (error?.message?.includes('surface')) {
@@ -182,9 +221,32 @@ export default function DecisioningItemsTab() {
       } else if (error?.message?.includes('network')) {
         setError('Network error - check connection');
       } else {
-        setError('Failed to fetch items');
+        setError('Failed to fetch items from server');
       }
       
+      throw error;
+    }
+  };
+
+  // Main function to get decisioning items (cache first, then server if needed)
+  const fetchDecisioningItems = async (configuration: DecisioningItemsConfig) => {
+    try {
+      console.log('🔵 DecisioningItems: Starting fetchDecisioningItems with surface:', configuration.surface);
+
+      // First, try to get cached items
+      const cachedItems = await getCachedDecisioningItems(configuration);
+      
+      if (cachedItems.length > 0) {
+        console.log('🔵 DecisioningItems: Using cached items');
+        return;
+      }
+
+      // If no cached items, fetch from server
+      console.log('🔵 DecisioningItems: No cached items, fetching from server...');
+      await fetchDecisioningItemsFromServer(configuration);
+      
+    } catch (error: any) {
+      console.error('🔴 DecisioningItems: Error in fetchDecisioningItems:', error);
       setItems([]);
       throw error;
     }
@@ -355,11 +417,7 @@ export default function DecisioningItemsTab() {
           item.propositionItem.track(null, MessagingEdgeEventType.DISPLAY);
         }
         console.log('🔵 DecisioningItems: ✅ Display tracking completed successfully');
-      } else {
-        console.log('🔴 DecisioningItems: PropositionItem.track() method not available');
-        console.log('🔴 DecisioningItems: PropositionItem methods:', Object.keys(item.propositionItem || {}));
-        console.log('🔴 DecisioningItems: This suggests an SDK version or setup issue');
-      }
+      } 
     } catch (error) {
       console.error('🔴 DecisioningItems: Error tracking display:', error);
     }
@@ -706,6 +764,27 @@ export default function DecisioningItemsTab() {
     );
   };
 
+  // Refresh items from server (like offers tab)
+  const refreshDecisioningItems = async () => {
+    if (!config) {
+      console.log('🔴 DecisioningItems: No config available for refresh');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      console.log('🔵 DecisioningItems: Manual refresh triggered');
+      await fetchDecisioningItemsFromServer(config);
+    } catch (error) {
+      console.error('🔴 DecisioningItems: Error during manual refresh:', error);
+      setError('Failed to refresh items');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const renderConfigError = () => (
     <View style={{ padding: 20, alignItems: 'center' }}>
       <ThemedText style={{ fontSize: 18, marginBottom: 10, textAlign: 'center' }}>
@@ -720,6 +799,37 @@ export default function DecisioningItemsTab() {
     </View>
   );
 
+  const renderNoItems = () => (
+    <View style={{ padding: 20, alignItems: 'center' }}>
+      <ThemedText style={{ fontSize: 18, marginBottom: 10 }}>
+        📭 No Items Available
+      </ThemedText>
+      <ThemedText style={{ textAlign: 'center', opacity: 0.8, marginBottom: 20 }}>
+        No personalized items found for the configured surface.
+      </ThemedText>
+      {config && (
+        <ThemedText style={{ textAlign: 'center', fontSize: 12, opacity: 0.6, marginBottom: 20 }}>
+          Surface: {config.surface}
+        </ThemedText>
+      )}
+      <TouchableOpacity
+        style={{
+          backgroundColor: tintColor,
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          borderRadius: 8,
+          marginTop: 10
+        }}
+        onPress={refreshDecisioningItems}
+        disabled={isLoading}
+      >
+        <ThemedText style={{ color: backgroundColor, fontWeight: 'bold' }}>
+          {isLoading ? 'Refreshing...' : 'Refresh Items'}
+        </ThemedText>
+      </TouchableOpacity>
+    </View>
+  );
+
   const renderContent = () => {
     if (error) {
       return renderConfigError();
@@ -730,28 +840,14 @@ export default function DecisioningItemsTab() {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 40 }}>
           <ActivityIndicator size="large" color={tintColor} />
           <ThemedText style={{ marginTop: 16, textAlign: 'center' }}>
-            Fetching personalized items...
+            {items.length > 0 ? 'Refreshing personalized items...' : 'Fetching personalized items...'}
           </ThemedText>
         </View>
       );
     }
 
     if (items.length === 0) {
-      return (
-        <View style={{ padding: 20, alignItems: 'center' }}>
-          <ThemedText style={{ fontSize: 18, marginBottom: 10 }}>
-            📭 No Items Available
-          </ThemedText>
-          <ThemedText style={{ textAlign: 'center', opacity: 0.8 }}>
-            No personalized items found for the configured surface.
-          </ThemedText>
-          {config && (
-            <ThemedText style={{ textAlign: 'center', fontSize: 12, opacity: 0.6, marginTop: 10 }}>
-              Surface: {config.surface}
-            </ThemedText>
-          )}
-        </View>
-      );
+      return renderNoItems();
     }
 
     return (
@@ -769,7 +865,14 @@ export default function DecisioningItemsTab() {
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
-            onRefresh={loadConfigAndFetchItems}
+            onRefresh={() => {
+              console.log('🔵 DecisioningItems: Pull-to-refresh triggered');
+              if (config) {
+                refreshDecisioningItems();
+              } else {
+                loadConfigAndFetchItems();
+              }
+            }}
             tintColor={tintColor}
           />
         }
@@ -783,9 +886,37 @@ export default function DecisioningItemsTab() {
             Personalized experiences from Adobe Journey Optimizer
           </ThemedText>
           {lastUpdated && (
-            <ThemedText style={{ opacity: 0.5, fontSize: 12, marginTop: 5 }}>
-              Last updated: {lastUpdated.toLocaleTimeString()}
-            </ThemedText>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+              <ThemedText style={{ opacity: 0.5, fontSize: 12 }}>
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </ThemedText>
+              {isFromCache && (
+                <View style={{ 
+                  marginLeft: 8, 
+                  backgroundColor: tintColor + '20', 
+                  paddingHorizontal: 6, 
+                  paddingVertical: 2, 
+                  borderRadius: 4 
+                }}>
+                  <ThemedText style={{ fontSize: 10, color: tintColor, fontWeight: 'bold' }}>
+                    CACHED
+                  </ThemedText>
+                </View>
+              )}
+              {!isFromCache && items.length > 0 && (
+                <View style={{ 
+                  marginLeft: 8, 
+                  backgroundColor: '#4CAF50' + '20', 
+                  paddingHorizontal: 6, 
+                  paddingVertical: 2, 
+                  borderRadius: 4 
+                }}>
+                  <ThemedText style={{ fontSize: 10, color: '#4CAF50', fontWeight: 'bold' }}>
+                    FRESH
+                  </ThemedText>
+                </View>
+              )}
+            </View>
           )}
         </View>
 
@@ -808,6 +939,11 @@ export default function DecisioningItemsTab() {
             {config.activityId && (
               <ThemedText style={{ fontSize: 12, opacity: 0.8 }}>
                 Activity ID: {config.activityId}
+              </ThemedText>
+            )}
+            {items.length > 0 && (
+              <ThemedText style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>
+                Items: {items.length} {isFromCache ? '(cached)' : '(fresh)'}
               </ThemedText>
             )}
           </View>
