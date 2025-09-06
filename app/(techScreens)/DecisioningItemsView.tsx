@@ -1,5 +1,5 @@
 /**
- * Edge Offers Configuration View
+ * Decisioning Items Configuration View
  * 
  * This screen allows configuration of Adobe Journey Optimizer Code-Based Experiences (CBE).
  * 
@@ -9,7 +9,7 @@
  * - Preview URL: Deep link for on-device previews
  * - Campaign Activity ID: Optional, for specific campaign targeting
  * 
- * Author: AI Assistant for Edge Offers implementation
+ * Author: AI Assistant for Decisioning Items implementation
  */
 
 import React, { useState, useEffect } from 'react';
@@ -20,24 +20,25 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-// AsyncStorage keys for Edge Offers configuration
-const EDGE_OFFERS_CONFIG_KEY = '@edge_offers_config';
+// AsyncStorage keys for Decisioning Items configuration
+const DECISIONING_ITEMS_CONFIG_KEY = '@decisioning_items_config';
+const LEGACY_EDGE_OFFERS_CONFIG_KEY = '@edge_offers_config'; // For migration from old key
 
-interface EdgeOffersConfig {
+interface DecisioningItemsConfig {
   surface: string;
   previewUrl: string;
   activityId?: string;
   description?: string;
 }
 
-export default function EdgeOffersView() {
+export default function DecisioningItemsView() {
   const router = useRouter();
   const textColor = useThemeColor({}, 'text');
   const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
 
   // Configuration state
-  const [config, setConfig] = useState<EdgeOffersConfig>({
+  const [config, setConfig] = useState<DecisioningItemsConfig>({
     surface: '',
     previewUrl: '',
     activityId: '',
@@ -53,17 +54,34 @@ export default function EdgeOffersView() {
 
   const loadSavedConfig = async () => {
     try {
-      const savedConfig = await AsyncStorage.getItem(EDGE_OFFERS_CONFIG_KEY);
-      console.log('🔵 Loading saved Edge Offers config:', savedConfig);
+      // First, try to load the new config
+      let savedConfig = await AsyncStorage.getItem(DECISIONING_ITEMS_CONFIG_KEY);
+      console.log('🔵 Loading saved Decisioning Items config:', savedConfig);
+      
+      // If no new config found, check for legacy Edge Offers config and migrate
+      if (!savedConfig) {
+        console.log('🔵 No Decisioning Items config found, checking for legacy Edge Offers config...');
+        const legacyConfig = await AsyncStorage.getItem(LEGACY_EDGE_OFFERS_CONFIG_KEY);
+        
+        if (legacyConfig) {
+          console.log('🔵 Found legacy Edge Offers config, migrating to Decisioning Items...');
+          // Migrate the config
+          await AsyncStorage.setItem(DECISIONING_ITEMS_CONFIG_KEY, legacyConfig);
+          // Optionally remove the old config
+          await AsyncStorage.removeItem(LEGACY_EDGE_OFFERS_CONFIG_KEY);
+          savedConfig = legacyConfig;
+          console.log('🔵 ✅ Successfully migrated legacy config to Decisioning Items');
+        }
+      }
       
       if (savedConfig) {
         const parsedConfig = JSON.parse(savedConfig);
         setConfig(parsedConfig);
-        console.log('🔵 Loaded Edge Offers config:', parsedConfig);
+        console.log('🔵 Loaded Decisioning Items config:', parsedConfig);
       }
       setIsInitialized(true);
     } catch (error) {
-      console.error('🔴 Error loading Edge Offers config:', error);
+      console.error('🔴 Error loading Decisioning Items config:', error);
       setIsInitialized(true);
     }
   };
@@ -83,7 +101,7 @@ export default function EdgeOffersView() {
 
       // Basic URL validation
       if (!config.previewUrl.includes('://')) {
-        Alert.alert('Error', 'Preview URL must be a valid deep link (e.g., myapp://edge-offers)');
+        Alert.alert('Error', 'Preview URL must be a valid deep link (e.g., myapp://decisioning-items)');
         return;
       }
 
@@ -95,19 +113,19 @@ export default function EdgeOffersView() {
         description: config.description?.trim() || '',
       };
 
-      console.log('🔵 Saving Edge Offers config:', configToSave);
-      await AsyncStorage.setItem(EDGE_OFFERS_CONFIG_KEY, JSON.stringify(configToSave));
+      console.log('🔵 Saving Decisioning Items config:', configToSave);
+      await AsyncStorage.setItem(DECISIONING_ITEMS_CONFIG_KEY, JSON.stringify(configToSave));
       
-      Alert.alert('Success', 'Edge Offers configuration saved successfully');
+      Alert.alert('Success', 'Decisioning Items configuration saved successfully');
     } catch (error) {
-      console.error('🔴 Error saving Edge Offers config:', error);
-      Alert.alert('Error', 'Failed to save Edge Offers configuration');
+      console.error('🔴 Error saving Decisioning Items config:', error);
+      Alert.alert('Error', 'Failed to save Decisioning Items configuration');
     }
   };
 
   const validateConfig = async () => {
     try {
-      const savedConfig = await AsyncStorage.getItem(EDGE_OFFERS_CONFIG_KEY);
+      const savedConfig = await AsyncStorage.getItem(DECISIONING_ITEMS_CONFIG_KEY);
       
       if (!savedConfig) {
         Alert.alert('Validation', 'No configuration found. Please save configuration first.');
@@ -135,22 +153,22 @@ export default function EdgeOffersView() {
 
   const clearConfig = async () => {
     try {
-      await AsyncStorage.removeItem(EDGE_OFFERS_CONFIG_KEY);
+      await AsyncStorage.removeItem(DECISIONING_ITEMS_CONFIG_KEY);
       setConfig({
         surface: '',
         previewUrl: '',
         activityId: '',
         description: '',
       });
-      console.log('🔵 Cleared Edge Offers configuration');
-      Alert.alert('Cleared', 'Edge Offers configuration cleared');
+      console.log('🔵 Cleared Decisioning Items configuration');
+      Alert.alert('Cleared', 'Decisioning Items configuration cleared');
     } catch (error) {
       console.error('🔴 Error clearing config:', error);
       Alert.alert('Error', 'Failed to clear configuration');
     }
   };
 
-  const updateField = (field: keyof EdgeOffersConfig, value: string) => {
+  const updateField = (field: keyof DecisioningItemsConfig, value: string) => {
     setConfig(prev => ({
       ...prev,
       [field]: value,
@@ -171,7 +189,7 @@ export default function EdgeOffersView() {
         <TouchableOpacity onPress={() => router.back()}>
           <ThemedText style={{ fontSize: 16, color: tintColor }}>← Back</ThemedText>
         </TouchableOpacity>
-        <ThemedText type="title">Edge Offers</ThemedText>
+        <ThemedText type="title">Decisioning Items</ThemedText>
         <View style={{ width: 50 }} />
       </View>
 
@@ -186,7 +204,7 @@ export default function EdgeOffersView() {
       <View style={{ marginVertical: 15 }}>
         <ThemedText style={{ marginBottom: 5, fontWeight: 'bold' }}>Surface/Location *</ThemedText>
         <ThemedText style={{ fontSize: 12, marginBottom: 5, opacity: 0.7 }}>
-          Surface identifier for AJO campaigns. Simple names (e.g., 'edge-offers') will be auto-converted to: @mobileapp://com.cmtBootCamp.AEPSampleAppNewArchEnabled/[surface-name]
+          Surface identifier for AJO campaigns. Simple names (e.g., 'decisioning-items') will be auto-converted to: @mobileapp://com.cmtBootCamp.AEPSampleAppNewArchEnabled/[surface-name]
         </ThemedText>
         <TextInput
           style={{
@@ -200,7 +218,7 @@ export default function EdgeOffersView() {
           }}
           value={config.surface}
           onChangeText={(text) => updateField('surface', text)}
-          placeholder="e.g., edge-offers"
+          placeholder="e.g., decisioning-items"
           placeholderTextColor={textColor + '80'}
         />
         
@@ -264,7 +282,7 @@ export default function EdgeOffersView() {
           }}
           value={config.previewUrl}
           onChangeText={(text) => updateField('previewUrl', text)}
-          placeholder="e.g., myapp://edge-offers"
+          placeholder="e.g., myapp://decisioning-items"
           placeholderTextColor={textColor + '80'}
           autoCapitalize="none"
           autoCorrect={false}
@@ -281,10 +299,10 @@ export default function EdgeOffersView() {
               borderWidth: 1,
               borderColor: tintColor + '40'
             }}
-            onPress={() => updateField('previewUrl', 'myapp://edge-offers')}
+            onPress={() => updateField('previewUrl', 'myapp://decisioning-items')}
           >
             <ThemedText style={{ fontSize: 12, color: tintColor, fontWeight: 'bold' }}>
-              myapp://edge-offers
+              myapp://decisioning-items
             </ThemedText>
           </TouchableOpacity>
           
@@ -297,7 +315,7 @@ export default function EdgeOffersView() {
               borderWidth: 1,
               borderColor: tintColor + '40'
             }}
-            onPress={() => updateField('previewUrl', 'com.cmtBootCamp.AEPSampleAppNewArchEnabled://edge-offers')}
+            onPress={() => updateField('previewUrl', 'com.cmtBootCamp.AEPSampleAppNewArchEnabled://decisioning-items')}
           >
             <ThemedText style={{ fontSize: 11, color: tintColor, fontWeight: 'bold' }}>
               Bundle ID Scheme
@@ -410,4 +428,3 @@ export default function EdgeOffersView() {
     </ScrollView>
   );
 }
-

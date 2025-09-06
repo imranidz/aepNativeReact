@@ -92,7 +92,7 @@ export default function RootLayout() {
           <Drawer.Screen name="(techScreens)/ProfileView" options={{ title: 'User Profile', drawerItemStyle: { display: 'none' } }} />
           <Drawer.Screen name="(techScreens)/PushNotificationView" options={{ title: 'Push Notifications', drawerItemStyle: { display: 'none' } }} />
           <Drawer.Screen name="(techScreens)/TargetView" options={{ title: 'Target', drawerItemStyle: { display: 'none' } }} />
-          <Drawer.Screen name="(techScreens)/EdgeOffersView" options={{ title: 'Edge Offers', drawerItemStyle: { display: 'none' } }} />
+          <Drawer.Screen name="(techScreens)/DecisioningItemsView" options={{ title: 'Decisioning Items', drawerItemStyle: { display: 'none' } }} />
           <Drawer.Screen name="(consumerTabs)" options={{ title: 'Consumer View' }} />
         </Drawer>
       </ThemeProvider>
