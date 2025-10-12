@@ -78,11 +78,12 @@ export const configureAdobe = async (appId: string) => {
     // Apply Messaging configuration
     try {
       const messagingConfig: any = {
-        'messaging.eventDataset': '6838c051f861982aef2661be'
+        // 'messaging.eventDataset': '6838c051f861982aef2661be'
       };
 
       if (Platform.OS === 'ios') {
-        messagingConfig['messaging.useSandbox'] = true;
+        // messagingConfig['messaging.useSandbox'] = true;
+        messagingConfig['messaging.useSandbox'] = false;
       }
 
       console.log('Applying Messaging configuration:', messagingConfig);

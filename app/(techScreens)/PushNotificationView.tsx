@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 import React, { useState, useEffect } from 'react';
 import { Button, View, ScrollView, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import * as Device from 'expo-device';
 import { ThemedView } from '../../components/ThemedView';
 import { ThemedText } from '../../components/ThemedText';
 import { useTheme } from '@react-navigation/native';
@@ -74,13 +75,23 @@ function PushNotificationView() {
 
   const sendTestNotification = async () => {
     try {
+      // Schedule the test notification with a 5 second delay
       await pushNotificationService.scheduleLocalNotification(
         'Test Notification',
         'This is a test notification from your app!',
-        { test: true, timestamp: Date.now() }
+        { test: true, timestamp: Date.now() },
+        { seconds: 5 }
       );
-      setLog(prev => prev + '\nTest notification scheduled');
-      Alert.alert('Success', 'Test notification sent!');
+      setLog(prev => prev + '\nTest notification scheduled (5 seconds delay)');
+      Alert.alert('Success', 'Test notification scheduled for 5 seconds from now!');
+      return;
+      // await pushNotificationService.scheduleLocalNotification(
+      //   'Test Notification',
+      //   'This is a test notification from your app!',
+      //   { test: true, timestamp: Date.now() }
+      // );
+      // setLog(prev => prev + '\nTest notification scheduled');
+      // Alert.alert('Success', 'Test notification sent!');
     } catch (error) {
       console.error('Error sending test notification:', error);
       setLog(prev => prev + '\nError sending test notification: ' + error);
@@ -124,6 +135,27 @@ function PushNotificationView() {
     }
   };
 
+  const checkDeviceInfo = () => {
+    const deviceInfo = {
+      isDevice: Device.isDevice,
+      platform: Platform.OS,
+      deviceName: Device.deviceName,
+      deviceType: Device.deviceType,
+      brand: Device.brand,
+      manufacturer: Device.manufacturer,
+      modelName: Device.modelName,
+      osName: Device.osName,
+      osVersion: Device.osVersion,
+    };
+    
+    const infoText = Object.entries(deviceInfo)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join('\n');
+      
+    setLog(prev => prev + '\n\nDevice Info:\n' + infoText);
+    Alert.alert('Device Information', infoText);
+  };
+
   return (
     <ThemedView style={styles.container}>
       <ScrollView contentContainerStyle={{marginTop: 75}}>
@@ -147,6 +179,11 @@ function PushNotificationView() {
         </ThemedText>
         <Button title="Get Scheduled Notifications" onPress={getScheduledNotifications} />
         <Button title="Cancel All Notifications" onPress={cancelAllNotifications} />
+        
+        <ThemedText style={{ marginTop: 24, color: theme.colors.text, fontSize: 16, fontWeight: 'bold' }}>
+          Device Information
+        </ThemedText>
+        <Button title="Check Device Info" onPress={checkDeviceInfo} />
         
         {pushToken && (
           <ThemedText style={{ marginTop: 16, color: theme.colors.text, fontSize: 14, textAlign: 'center' }}>
